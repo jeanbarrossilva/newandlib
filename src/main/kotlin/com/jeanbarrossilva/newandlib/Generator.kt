@@ -23,7 +23,7 @@ internal object Generator {
 
     context(Prompter)
     private fun FileWriter.writeBuildSrcFiles() {
-        writeTo("buildSrc/src/main/java/utils/Properties.extensions", """
+        writeTo("buildSrc/src/main/java/utils/Properties.extensions.kt", """
             import java.io.File
             import java.io.InputStreamReader
             import java.util.Properties
