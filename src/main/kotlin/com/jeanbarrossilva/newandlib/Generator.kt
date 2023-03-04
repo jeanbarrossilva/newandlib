@@ -6,7 +6,7 @@ import com.jeanbarrossilva.newandlib.utils.GradleWrapperPropertiesHeaderDateTime
 import com.jeanbarrossilva.newandlib.writer.FileWriter
 import com.jeanbarrossilva.newandlib.writer.at
 import java.nio.file.Paths
-import java.time.LocalDateTime
+import java.time.ZonedDateTime
 import kotlin.io.path.createDirectories
 
 internal object Generator {
@@ -100,7 +100,7 @@ internal object Generator {
     context(Prompter)
     private fun FileWriter.writeGradleFiles() {
         writeTo("gradle/wrapper/gradle-wrapper.properties", """
-            #${LocalDateTime.now().format(GradleWrapperPropertiesHeaderDateTimeFormatter())}
+            #${ZonedDateTime.now().format(GradleWrapperPropertiesHeaderDateTimeFormatter())}
             distributionBase=GRADLE_USER_HOME
             distributionUrl=https\://services.gradle.org/distributions/gradle-7.5-bin.zip
             distributionPath=wrapper/dists

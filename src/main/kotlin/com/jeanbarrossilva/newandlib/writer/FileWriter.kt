@@ -8,6 +8,7 @@ import java.nio.file.Paths
 internal class FileWriter(private val origin: String) {
     fun writeTo(pathValue: String, content: String) {
         val path = absolute(pathValue)
+        Files.createDirectories(path.parent)
         val file = Files.createFile(path)
         if (file != null) {
             writeTo(file, content)
