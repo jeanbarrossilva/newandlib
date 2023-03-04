@@ -1,7 +1,7 @@
 package com.jeanbarrossilva.newandlib
 
 import com.jeanbarrossilva.newandlib.prompter.Prompter
-import com.jeanbarrossilva.newandlib.prompter.formattedProjectName
+import com.jeanbarrossilva.newandlib.prompter.hyphenatedProjectName
 import com.jeanbarrossilva.newandlib.utils.GradleWrapperPropertiesHeaderDateTimeFormatter
 import com.jeanbarrossilva.newandlib.writer.FileWriter
 import com.jeanbarrossilva.newandlib.writer.at
@@ -51,7 +51,7 @@ internal object Generator {
         writeTo("buildSrc/src/main/java/Metadata.kt", """
             object Metadata {
                 const val GROUP = "${get(Prompts.GROUP_ID)}"
-                const val ARTIFACT = "$formattedProjectName"
+                const val ARTIFACT = "$hyphenatedProjectName"
                 const val NAMESPACE = GROUP
 
                 fun namespace(suffix: String): String {
@@ -76,6 +76,14 @@ internal object Generator {
                 const val GRADLE = "7.4.1"
                 const val KOTLIN = "1.8.10"
                 const val TEST_RUNNER = "1.5.2"
+
+                object ${get(Prompts.PROJECT_NAME)} {
+                    const val CODE = 0
+                    const val NAME = "1.0.0"
+                    const val SDK_COMPILE = 33
+                    const val SDK_MIN = 21
+                    const val SDK_TARGET = SDK_COMPILE
+                }
             }
         """)
         writeTo("buildSrc/build.gradle.kts", """
@@ -114,14 +122,14 @@ internal object Generator {
             @Suppress("UnstableApiUsage")
             android {
                 namespace = Metadata.namespace("app")
-                compileSdk = Versions.Aurelius.SDK_COMPILE
+                compileSdk = Versions.${get(Prompts.PROJECT_NAME)}.SDK_COMPILE
             
                 defaultConfig {
                     applicationId = Metadata.GROUP
-                    minSdk = Versions.Aurelius.SDK_MIN
-                    targetSdk = Versions.Aurelius.SDK_TARGET
-                    versionCode = Versions.Aurelius.CODE
-                    versionName = Versions.Aurelius.NAME
+                    minSdk = Versions.${get(Prompts.PROJECT_NAME)}.SDK_MIN
+                    targetSdk = Versions.${get(Prompts.PROJECT_NAME)}.SDK_TARGET
+                    versionCode = Versions.${get(Prompts.PROJECT_NAME)}.CODE
+                    versionName = Versions.${get(Prompts.PROJECT_NAME)}.NAME
                     testInstrumentationRunner = Libraries.TEST_RUNNER
                 }
             
@@ -151,8 +159,8 @@ internal object Generator {
     context(Prompter)
     private fun FileWriter.writeLibraryFiles() {
         val `package` = get(Prompts.GROUP_ID)!!.replace('/', '.')
-        Paths.get("$formattedProjectName/src/main/java/$`package`").createDirectories()
-        writeManifestAt(formattedProjectName)
+        Paths.get("$hyphenatedProjectName/src/main/java/$`package`").createDirectories()
+        writeManifestAt(hyphenatedProjectName)
     }
 
     context(Prompter)

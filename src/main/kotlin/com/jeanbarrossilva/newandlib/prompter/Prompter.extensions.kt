@@ -4,8 +4,8 @@ import com.google.common.base.CaseFormat
 import com.jeanbarrossilva.newandlib.Prompts
 import com.jeanbarrossilva.newandlib.prompter.system.SystemPrompter
 
-/** Formatted value input into [Prompts.PROJECT_NAME]. **/
-internal val Prompter.formattedProjectName
+/** Hyphenated value input into [Prompts.PROJECT_NAME]. **/
+internal val Prompter.hyphenatedProjectName
     get() = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_HYPHEN, get(Prompts.PROJECT_NAME)!!)
 
 /**
