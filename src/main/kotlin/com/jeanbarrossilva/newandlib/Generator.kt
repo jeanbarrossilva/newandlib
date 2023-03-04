@@ -144,6 +144,13 @@ internal object Generator {
             zipStorePath=wrapper/dists
             zipStoreBase=GRADLE_USER_HOME
         """)
+        Thread
+            .currentThread()
+            .contextClassLoader
+            .getResourceAsStream("gradle-wrapper.jar")
+            ?.reader()
+            ?.readText()
+            ?.let { writeTo("gradle/wrapper/gradle-wrapper.jar", it) }
     }
 
     context(Prompter)
