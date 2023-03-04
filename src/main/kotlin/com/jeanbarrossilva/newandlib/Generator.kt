@@ -448,7 +448,10 @@ internal object Generator {
             "local.properties",
             "sdk.dir=/Users/${System.getProperty("user.name")}/Library/Android/sdk"
         )
-        writeTo("settings.gradle.kts", "rootProject.name = \"${get(Prompts.PROJECT_NAME)}\"\n")
+        writeTo("settings.gradle.kts", """
+            rootProject.name = "${get(Prompts.PROJECT_NAME)}"
+            include(":app", ":$hyphenatedProjectName")
+        """)
     }
 
     private fun FileWriter.writeManifestAt(directoryPath: String) {
