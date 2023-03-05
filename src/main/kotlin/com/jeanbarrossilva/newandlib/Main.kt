@@ -22,6 +22,7 @@ fun main() {
             ""
         )
         Generator.generate()
+        Runtime.getRuntime().exec("chmod +x gradlew")
         Runtime.getRuntime().exec("studio ${get(Prompts.PROJECT_PATH)}")
         println("Done!")
     }
