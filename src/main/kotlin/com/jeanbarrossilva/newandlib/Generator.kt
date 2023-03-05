@@ -176,6 +176,7 @@ internal object Generator {
                 }
             }
         """)
+        writeTo("buildSrc/.gitignore", "/build")
         writeTo("buildSrc/build.gradle.kts", """
             plugins {
                 `kotlin-dsl`
@@ -233,7 +234,7 @@ internal object Generator {
     context(Prompter)
     private fun FileWriter.writeAppFiles() {
         writeManifestAt("app/src/main")
-        writeTo("app/.gitignore", ".build")
+        writeTo("app/.gitignore", "/build")
         writeTo("app/build.gradle.kts", """
             plugins {
                 id("com.android.application")
@@ -282,6 +283,7 @@ internal object Generator {
         val `package` = get(Prompts.GROUP_ID)!!.replace('/', '.')
         Paths.get("$hyphenatedProjectName/src/main/java/$`package`").createDirectories()
         writeManifestAt("$hyphenatedProjectName/src/main")
+        writeTo("$hyphenatedProjectName/.gitignore", "/build")
         writeTo("$hyphenatedProjectName/build.gradle.kts", """
             plugins {
                 id("com.android.library")
