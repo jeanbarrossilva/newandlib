@@ -85,6 +85,11 @@ internal object Generator {
                 }
             }
         """)
+        writeTo("buildSrc/src/main/java/Libraries.kt", """
+            object Libraries {
+                const val TEST_RUNNER = "androidx.test.runner.AndroidJUnitRunner"
+            }
+        """)
         writeTo("buildSrc/src/main/java/Metadata.kt", """
             object Metadata {
                 const val GROUP = "${get(Prompts.GROUP_ID)}"
