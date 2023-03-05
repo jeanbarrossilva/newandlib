@@ -16,6 +16,11 @@ fun main() {
             get(Prompts.GROUP_ID)
         )
         prompt(Prompts.PROJECT_PATH, "Where would you like the project to be created?", currentPath)
+        prompt(
+            Prompts.REPOSITORY_URL,
+            "What is the URL of the repository to which the project will be uploaded?",
+            ""
+        )
         Generator.generate()
         Runtime.getRuntime().exec("studio ${get(Prompts.PROJECT_PATH)}")
         println("Done!")

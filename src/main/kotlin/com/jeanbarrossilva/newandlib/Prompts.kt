@@ -5,4 +5,5 @@ internal object Prompts {
     const val LIBRARY_MODULE_NAMESPACE = "library-module-namespace"
     const val PROJECT_NAME = "project-name"
     const val PROJECT_PATH = "project-path"
+    const val REPOSITORY_URL = "repository-url"
 }

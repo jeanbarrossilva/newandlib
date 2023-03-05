@@ -2,6 +2,7 @@ package com.jeanbarrossilva.newandlib
 
 import com.jeanbarrossilva.newandlib.prompter.Prompter
 import com.jeanbarrossilva.newandlib.prompter.hyphenatedProjectName
+import com.jeanbarrossilva.newandlib.prompter.lowerCamelCasedProjectName
 import com.jeanbarrossilva.newandlib.utils.GradleWrapperPropertiesHeaderDateTimeFormatter
 import com.jeanbarrossilva.newandlib.writer.FileWriter
 import com.jeanbarrossilva.newandlib.writer.at
@@ -23,68 +24,7 @@ internal object Generator {
 
     context(Prompter)
     private fun FileWriter.writeBuildSrcFiles() {
-        writeTo("buildSrc/src/main/java/utils/Properties.extensions.kt", """
-            import java.io.File
-            import java.io.InputStreamReader
-            import java.util.Properties
-            
-            /**
-             * Creates [Properties] according to the `local.properties` file.
-             *
-             * @param root Directory in which the `local.properties` file is.
-             **/
-            fun localProperties(root: File): Properties {
-                val file = File(root, "local.properties")
-                return Properties().apply { tryToLoad(file) }
-            }
-            
-            /**
-             * Loads the given [file] into these [Properties].
-             *
-             * @param file [File] to be loaded.
-             **/
-            private fun Properties.load(file: File) {
-                file.inputStream().reader().use {
-                    load(it)
-                }
-            }
-            
-            /**
-             * Loads the given [file] into these [Properties] if it's a normal file.
-             *
-             * @param file [File] to be loaded.
-             **/
-            private fun Properties.tryToLoad(file: File) {
-                if (file.isFile) {
-                    load(file)
-                }
-            }
-        """)
-        writeTo("buildSrc/src/main/java/utils/RepositoryHandler.extensions.kt", """
-            import java.net.URI
-            import org.gradle.api.Project
-            import org.gradle.api.artifacts.dsl.RepositoryHandler
-            import org.gradle.api.artifacts.repositories.MavenArtifactRepository
-            
-            /**
-             * Adds the repository in which the
-             * [Aurelius design system](https://github.com/jeanbarrossilva/aurelius-android) is located.
-             *
-             * @param project [Project] to which the repository is being added.
-             **/
-            fun RepositoryHandler.aurelius(project: Project): MavenArtifactRepository {
-                return maven {
-                    url = URI.create("https://maven.pkg.github.com/jeanbarrossilva/aurelius-android")
-            
-                    credentials {
-                        with(localProperties(project.rootDir)) {
-                            username = getProperty("github.username") ?: System.getenv("GITHUB_USERNAME")
-                            password = getProperty("github.token") ?: System.getenv("GITHUB_TOKEN")
-                        }
-                    }
-                }
-            }
-        """)
+        writeBuildSrcExtensionFiles()
         writeTo("buildSrc/src/main/java/Libraries.kt", """
             object Libraries {
                 const val TEST_RUNNER = "androidx.test.runner.AndroidJUnitRunner"
@@ -136,11 +76,75 @@ internal object Generator {
             plugins {
                 `kotlin-dsl`
             }
-            
+
             repositories {
                 mavenCentral()
             }
         """)
+    }
+
+    context(Prompter)
+    private fun FileWriter.writeBuildSrcExtensionFiles() {
+        val hasRepositoryUrl = get(Prompts.REPOSITORY_URL)!!.isNotBlank()
+        if (hasRepositoryUrl) {
+            writeTo("buildSrc/src/main/java/utils/Properties.extensions.kt", """
+            import java.io.File
+            import java.io.InputStreamReader
+            import java.util.Properties
+
+            /**
+             * Creates [Properties] according to the `local.properties` file.
+             *
+             * @param root Directory in which the `local.properties` file is.
+             **/
+            fun localProperties(root: File): Properties {
+                val file = File(root, "local.properties")
+                return Properties().apply { tryToLoad(file) }
+            }
+
+            /**
+             * Loads the given [file] into these [Properties].
+             *
+             * @param file [File] to be loaded.
+             **/
+            private fun Properties.load(file: File) {
+                file.inputStream().reader().use {
+                    load(it)
+                }
+            }
+
+            /**
+             * Loads the given [file] into these [Properties] if it's a normal file.
+             *
+             * @param file [File] to be loaded.
+             **/
+            private fun Properties.tryToLoad(file: File) {
+                if (file.isFile) {
+                    load(file)
+                }
+            }
+        """)
+        writeTo("buildSrc/src/main/java/utils/RepositoryHandler.extensions.kt", """
+            import java.net.URI
+            import org.gradle.api.Project
+            import org.gradle.api.artifacts.dsl.RepositoryHandler
+            import org.gradle.api.artifacts.repositories.MavenArtifactRepository
+
+            /** Adds the repository in which ${get(Prompts.PROJECT_NAME)} is located. **/
+            fun RepositoryHandler.$lowerCamelCasedProjectName(): MavenArtifactRepository {
+                return maven {
+                    url = URI.create("${get(Prompts.REPOSITORY_URL)}")
+
+                    credentials {
+                        with(localProperties(project.rootDir)) {
+                            username = getProperty("github.username") ?: System.getenv("GITHUB_USERNAME")
+                            password = getProperty("github.token") ?: System.getenv("GITHUB_TOKEN")
+                        }
+                    }
+                }
+            }
+        """)
+        }
     }
 
     context(Prompter)
@@ -171,12 +175,12 @@ internal object Generator {
                 id("com.android.application")
                 id("kotlin-android")
             }
-            
+
             @Suppress("UnstableApiUsage")
             android {
                 namespace = Metadata.namespace("app")
                 compileSdk = Versions.${get(Prompts.PROJECT_NAME)}.SDK_COMPILE
-            
+
                 defaultConfig {
                     applicationId = Metadata.GROUP
                     minSdk = Versions.${get(Prompts.PROJECT_NAME)}.SDK_MIN
@@ -185,7 +189,7 @@ internal object Generator {
                     versionName = Versions.${get(Prompts.PROJECT_NAME)}.NAME
                     testInstrumentationRunner = Libraries.TEST_RUNNER
                 }
-            
+
                 buildTypes {
                     getByName(Variants.RELEASE) {
                         isMinifyEnabled = true
@@ -195,12 +199,12 @@ internal object Generator {
                         )
                     }
                 }
-            
+
                 compileOptions {
                     sourceCompatibility = Versions.java
                     targetCompatibility = Versions.java
                 }
-            
+
                 kotlinOptions {
                     jvmTarget = Versions.java.toString()
                 }
@@ -213,7 +217,77 @@ internal object Generator {
     private fun FileWriter.writeLibraryFiles() {
         val `package` = get(Prompts.GROUP_ID)!!.replace('/', '.')
         Paths.get("$hyphenatedProjectName/src/main/java/$`package`").createDirectories()
-        writeManifestAt(hyphenatedProjectName)
+        writeManifestAt("$hyphenatedProjectName/src/main")
+        writeTo("$hyphenatedProjectName/build.gradle.kts", """
+            plugins {
+                id("com.android.library")
+                id("kotlin-android")
+                `maven-publish`
+            }
+
+            publishing {
+                repositories {
+                    $lowerCamelCasedProjectName()
+                }
+
+                publications {
+                    register<MavenPublication>(Variants.RELEASE) {
+                        groupId = Metadata.GROUP
+                        artifactId = Metadata.ARTIFACT
+                        version = Versions.${get(Prompts.PROJECT_NAME)}.NAME
+
+                        afterEvaluate {
+                            from(components[Variants.RELEASE])
+                        }
+                    }
+                }
+            }
+
+            @Suppress("UnstableApiUsage")
+            android {
+                namespace = Metadata.NAMESPACE
+                compileSdk = Versions.${get(Prompts.PROJECT_NAME)}.SDK_COMPILE
+
+                defaultConfig {
+                    minSdk = Versions.${get(Prompts.PROJECT_NAME)}.SDK_MIN
+            
+                    @Suppress("DEPRECATION")
+                    targetSdk = Versions.${get(Prompts.PROJECT_NAME)}.SDK_TARGET
+            
+                    testInstrumentationRunner = Libraries.TEST_RUNNER
+                }
+
+                publishing {
+                    singleVariant(Variants.RELEASE) {
+                        withSourcesJar()
+                        withJavadocJar()
+                    }
+                }
+
+                buildTypes {
+                    getByName(Variants.RELEASE) {
+                        isMinifyEnabled = false
+                        proguardFiles(
+                            getDefaultProguardFile("proguard-android-optimize.txt"),
+                            "proguard-rules.pro"
+                        )
+                    }
+                }
+
+                buildFeatures {
+                    viewBinding = true
+                }
+
+                compileOptions {
+                    sourceCompatibility = Versions.java
+                    targetCompatibility = Versions.java
+                }
+
+                kotlinOptions {
+                    jvmTarget = Versions.java.toString()
+                }
+            }
+        """)
     }
 
     context(Prompter)
@@ -236,13 +310,13 @@ internal object Generator {
                     google()
                     mavenCentral()
                 }
-            
+
                 dependencies {
                     classpath(Plugins.GRADLE)
                     classpath(Plugins.KOTLIN)
                 }
             }
-            
+
             allprojects {
                 repositories {
                     aurelius(project)
@@ -250,7 +324,7 @@ internal object Generator {
                     mavenCentral()
                 }
             }
-            
+
             tasks.register<Delete>("clean") {
                 delete(rootProject.buildDir)
             }
@@ -267,7 +341,7 @@ internal object Generator {
         @Suppress("SpellCheckingInspection")
         writeTo("gradlew", """
             #!/usr/bin/env sh
-            
+
             #
             # Copyright 2015 the original author or authors.
             #
@@ -283,13 +357,13 @@ internal object Generator {
             # See the License for the specific language governing permissions and
             # limitations under the License.
             #
-            
+
             ##############################################################################
             ##
             ##  Gradle start up script for UN*X
             ##
             ##############################################################################
-            
+
             # Attempt to set APP_HOME
             # Resolve links: ${'$'}0 may be a link
             PRG="${'$'}0"
@@ -307,27 +381,27 @@ internal object Generator {
             cd "`dirname \"${'$'}PRG\"`/" >/dev/null
             APP_HOME="`pwd -P`"
             cd "${'$'}SAVED" >/dev/null
-            
+
             APP_NAME="Gradle"
             APP_BASE_NAME=`basename "${'$'}0"`
-            
+
             # Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.
             DEFAULT_JVM_OPTS='"-Xmx64m" "-Xms64m"'
-            
+
             # Use the maximum available, or set MAX_FD != -1 to use that value.
             MAX_FD="maximum"
-            
+
             warn () {
                 echo "${'$'}*"
             }
-            
+
             die () {
                 echo
                 echo "${'$'}*"
                 echo
                 exit 1
             }
-            
+
             # OS specific support (must be 'true' or 'false').
             cygwin=false
             msys=false
@@ -347,10 +421,10 @@ internal object Generator {
                 nonstop=true
                 ;;
             esac
-            
+
             CLASSPATH=${'$'}APP_HOME/gradle/wrapper/gradle-wrapper.jar
-            
-            
+
+
             # Determine the Java command to use to start the JVM.
             if [ -n "${'$'}JAVA_HOME" ] ; then
                 if [ -x "${'$'}JAVA_HOME/jre/sh/java" ] ; then
@@ -361,18 +435,18 @@ internal object Generator {
                 fi
                 if [ ! -x "${'$'}JAVACMD" ] ; then
                     die "ERROR: JAVA_HOME is set to an invalid directory: ${'$'}JAVA_HOME
-            
+
             Please set the JAVA_HOME variable in your environment to match the
             location of your Java installation."
                 fi
             else
                 JAVACMD="java"
                 which java >/dev/null 2>&1 || die "ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH.
-            
+
             Please set the JAVA_HOME variable in your environment to match the
             location of your Java installation."
             fi
-            
+
             # Increase the maximum file descriptors if we can.
             if [ "${'$'}cygwin" = "false" -a "${'$'}darwin" = "false" -a "${'$'}nonstop" = "false" ] ; then
                 MAX_FD_LIMIT=`ulimit -H -n`
@@ -388,19 +462,19 @@ internal object Generator {
                     warn "Could not query maximum file descriptor limit: ${'$'}MAX_FD_LIMIT"
                 fi
             fi
-            
+
             # For Darwin, add options to specify how the application appears in the dock
             if ${'$'}darwin; then
                 GRADLE_OPTS="${'$'}GRADLE_OPTS \"-Xdock:name=${'$'}APP_NAME\" \"-Xdock:icon=${'$'}APP_HOME/media/gradle.icns\""
             fi
-            
+
             # For Cygwin or MSYS, switch paths to Windows format before running java
             if [ "${'$'}cygwin" = "true" -o "${'$'}msys" = "true" ] ; then
                 APP_HOME=`cygpath --path --mixed "${'$'}APP_HOME"`
                 CLASSPATH=`cygpath --path --mixed "${'$'}CLASSPATH"`
-            
+
                 JAVACMD=`cygpath --unix "${'$'}JAVACMD"`
-            
+
                 # We build the pattern for arguments to be converted via cygpath
                 ROOTDIRSRAW=`find -L / -maxdepth 1 -mindepth 1 -type d 2>/dev/null`
                 SEP=""
@@ -439,14 +513,14 @@ internal object Generator {
                     9) set -- "${'$'}args0" "${'$'}args1" "${'$'}args2" "${'$'}args3" "${'$'}args4" "${'$'}args5" "${'$'}args6" "${'$'}args7" "${'$'}args8" ;;
                 esac
             fi
-            
+
             # Escape application args
             save () {
                 for i do printf %s\\n "${'$'}i" | sed "s/'/'\\\\''/g;1s/^/'/;\${'$'}s/\${'$'}/' \\\\/" ; done
                 echo " "
             }
             APP_ARGS=`save "${'$'}@"`
-            
+
             # Collect all arguments for the java command, following the shell quoting and substitution rules
             eval set -- ${'$'}DEFAULT_JVM_OPTS ${'$'}JAVA_OPTS ${'$'}GRADLE_OPTS "\"-Dorg.gradle.appname=${'$'}APP_BASE_NAME\"" -classpath "\"${'$'}CLASSPATH\"" org.gradle.wrapper.GradleWrapperMain "${'$'}APP_ARGS"
             

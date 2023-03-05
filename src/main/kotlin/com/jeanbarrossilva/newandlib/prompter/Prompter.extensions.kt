@@ -8,6 +8,10 @@ import com.jeanbarrossilva.newandlib.prompter.system.SystemPrompter
 internal val Prompter.hyphenatedProjectName
     get() = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_HYPHEN, get(Prompts.PROJECT_NAME)!!)
 
+/** Lower-camel-cased value input into [Prompts.PROJECT_NAME].  **/
+internal val Prompter.lowerCamelCasedProjectName
+    get() = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, get(Prompts.PROJECT_NAME)!!)
+
 /**
  * Runs [prompt] with a [SystemPrompter].
  *
