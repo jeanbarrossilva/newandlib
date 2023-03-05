@@ -15,15 +15,15 @@ internal abstract class Generator {
     protected abstract val prompter: Prompter
 
     fun generate() {
-        writeWorkflowFiles()
-        writeBuildSrcFiles()
-        writeGradleFiles()
-        writeAppFiles()
-        writeRootFiles()
+        generateWorkflowFiles()
+        generateBuildSrcFiles()
+        generateGradleFiles()
+        generateAppFiles()
+        generateRootFiles()
         onGenerate()
     }
 
-    private fun writeWorkflowFiles() {
+    private fun generateWorkflowFiles() {
         fileWriter.writeTo(".github/workflows/gradle.yml", """
             name: Java CI with Gradle
             on:
@@ -124,7 +124,7 @@ internal abstract class Generator {
         }
     }
 
-    private fun writeBuildSrcFiles() {
+    private fun generateBuildSrcFiles() {
         writeBuildSrcExtensionFiles()
         fileWriter.writeTo("buildSrc/src/main/java/Libraries.kt", """
             object Libraries {
@@ -207,7 +207,7 @@ internal abstract class Generator {
         }
     }
 
-    private fun writeGradleFiles() {
+    private fun generateGradleFiles() {
         fileWriter.writeTo("gradle/wrapper/gradle-wrapper.properties", """
             #${ZonedDateTime.now().format(GradleWrapperPropertiesHeaderDateTimeFormatter())}
             distributionBase=GRADLE_USER_HOME
@@ -225,7 +225,7 @@ internal abstract class Generator {
             ?.let { fileWriter.writeTo("gradle/wrapper/gradle-wrapper.jar", it) }
     }
 
-    private fun writeAppFiles() {
+    private fun generateAppFiles() {
         generateManifestAt("app/src/main")
         fileWriter.writeTo("app/.gitignore", "/build")
         fileWriter.writeTo("app/build.gradle.kts", """
@@ -271,7 +271,7 @@ internal abstract class Generator {
         fileWriter.writeTo("app/proguard-rules.pro", "")
     }
 
-    private fun writeRootFiles() {
+    private fun generateRootFiles() {
         fileWriter.writeTo(".gitignore", """
             *.iml
             .gradle
