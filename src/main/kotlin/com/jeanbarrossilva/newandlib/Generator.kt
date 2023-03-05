@@ -124,7 +124,7 @@ internal object Generator {
                 val java = JavaVersion.VERSION_17
 
                 object ${get(Prompts.PROJECT_NAME)} {
-                    const val CODE = 0
+                    const val CODE = 1
                     const val NAME = "1.0.0"
                     const val SDK_COMPILE = 33
                     const val SDK_MIN = 21
