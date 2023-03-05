@@ -22,7 +22,7 @@ internal abstract class Prompter {
      *
      * @param key Key of the prompt whose response will be obtained.
      **/
-    fun get(key: String): String? {
+    operator fun get(key: String): String? {
         return get<String>(key)
     }
 

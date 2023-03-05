@@ -6,27 +6,25 @@ import com.jeanbarrossilva.newandlib.prompter.hyphenatedProjectName
 import com.jeanbarrossilva.newandlib.prompter.lowerCamelCasedProjectName
 import com.jeanbarrossilva.newandlib.utils.GradleWrapperPropertiesHeaderDateTimeFormatter
 import com.jeanbarrossilva.newandlib.writer.FileWriter
-import com.jeanbarrossilva.newandlib.writer.at
 import java.nio.file.Paths
 import java.time.ZonedDateTime
 import kotlin.io.path.createDirectories
 
-internal object Generator {
-    context(Prompter)
+internal abstract class Generator {
+    protected abstract val prompter: Prompter
+    protected abstract val fileWriter: FileWriter
+
     fun generate() {
-        at(get(Prompts.PROJECT_PATH)!!) {
-            writeWorkflowFiles()
-            writeBuildSrcFiles()
-            writeGradleFiles()
-            writeAppFiles()
-            writeLibraryFiles()
-            writeRootFiles()
-        }
+        writeWorkflowFiles()
+        writeBuildSrcFiles()
+        writeGradleFiles()
+        writeAppFiles()
+        writeLibraryFiles()
+        writeRootFiles()
     }
 
-    context(Prompter)
-    private fun FileWriter.writeWorkflowFiles() {
-        writeTo(".github/workflows/gradle.yml", """
+    private fun writeWorkflowFiles() {
+        fileWriter.writeTo(".github/workflows/gradle.yml", """
             name: Java CI with Gradle
             on:
               push:
@@ -52,7 +50,7 @@ internal object Generator {
                     with:
                       arguments: build
         """)
-        writeTo(".github/workflows/instrumentation.yml", """
+        fileWriter.writeTo(".github/workflows/instrumentation.yml", """
             name: Instrumented tests
             on:
               push:
@@ -86,10 +84,9 @@ internal object Generator {
         writePublishingWorkflowFile()
     }
 
-    context(Prompter)
-    private fun FileWriter.writePublishingWorkflowFile() {
-        if (hasRepositoryUrl) {
-            writeTo(".github/workflows/publishing.yml", """
+    private fun writePublishingWorkflowFile() {
+        if (prompter.hasRepositoryUrl) {
+            fileWriter.writeTo(".github/workflows/publishing.yml", """
                 name: Publishing
                 on:
                   release:
@@ -127,18 +124,17 @@ internal object Generator {
         }
     }
 
-    context(Prompter)
-    private fun FileWriter.writeBuildSrcFiles() {
+    private fun writeBuildSrcFiles() {
         writeBuildSrcExtensionFiles()
-        writeTo("buildSrc/src/main/java/Libraries.kt", """
+        fileWriter.writeTo("buildSrc/src/main/java/Libraries.kt", """
             object Libraries {
                 const val TEST_RUNNER = "androidx.test.runner.AndroidJUnitRunner"
             }
         """)
-        writeTo("buildSrc/src/main/java/Metadata.kt", """
+        fileWriter.writeTo("buildSrc/src/main/java/Metadata.kt", """
             object Metadata {
-                const val GROUP = "${get(Prompts.GROUP_ID)}"
-                const val ARTIFACT = "$hyphenatedProjectName"
+                const val GROUP = "${prompter[Prompts.GROUP_ID]}"
+                const val ARTIFACT = "${prompter.hyphenatedProjectName}"
                 const val NAMESPACE = GROUP
 
                 fun namespace(suffix: String): String {
@@ -146,18 +142,18 @@ internal object Generator {
                 }
             }
         """)
-        writeTo("buildSrc/src/main/java/Plugins.kt", """
+        fileWriter.writeTo("buildSrc/src/main/java/Plugins.kt", """
             object Plugins {
                 const val GRADLE = "com.android.tools.build:gradle:${'$'}{Versions.GRADLE}"
                 const val KOTLIN = "org.jetbrains.kotlin:kotlin-gradle-plugin:${'$'}{Versions.KOTLIN}"
             }
         """)
-        writeTo("buildSrc/src/main/java/Variants.kt", """
+        fileWriter.writeTo("buildSrc/src/main/java/Variants.kt", """
             object Variants {
                 const val RELEASE = "release"
             }
         """)
-        writeTo("buildSrc/src/main/java/Versions.kt", """
+        fileWriter.writeTo("buildSrc/src/main/java/Versions.kt", """
             import org.gradle.api.JavaVersion
 
             object Versions {
@@ -167,7 +163,7 @@ internal object Generator {
 
                 val java = JavaVersion.VERSION_17
 
-                object ${get(Prompts.PROJECT_NAME)} {
+                object ${prompter[Prompts.PROJECT_NAME]} {
                     const val CODE = 1
                     const val NAME = "1.0.0"
                     const val SDK_COMPILE = 33
@@ -176,8 +172,8 @@ internal object Generator {
                 }
             }
         """)
-        writeTo("buildSrc/.gitignore", "/build")
-        writeTo("buildSrc/build.gradle.kts", """
+        fileWriter.writeTo("buildSrc/.gitignore", "/build")
+        fileWriter.writeTo("buildSrc/build.gradle.kts", """
             plugins {
                 `kotlin-dsl`
             }
@@ -188,19 +184,18 @@ internal object Generator {
         """)
     }
 
-    context(Prompter)
-    private fun FileWriter.writeBuildSrcExtensionFiles() {
-        if (hasRepositoryUrl) {
-            writeTo("buildSrc/src/main/java/utils/RepositoryHandler.extensions.kt", """
+    private fun writeBuildSrcExtensionFiles() {
+        if (prompter.hasRepositoryUrl) {
+            fileWriter.writeTo("buildSrc/src/main/java/utils/RepositoryHandler.extensions.kt", """
                 import java.net.URI
                 import org.gradle.api.Project
                 import org.gradle.api.artifacts.dsl.RepositoryHandler
                 import org.gradle.api.artifacts.repositories.MavenArtifactRepository
 
-                /** Adds the repository in which ${get(Prompts.PROJECT_NAME)} is located. **/
-                fun RepositoryHandler.$lowerCamelCasedProjectName(): MavenArtifactRepository {
+                /** Adds the repository in which ${prompter[Prompts.PROJECT_NAME]} is located. **/
+                fun RepositoryHandler.${prompter.lowerCamelCasedProjectName}(): MavenArtifactRepository {
                     return maven {
-                        url = URI.create("${get(Prompts.REPOSITORY_URL)}")
+                        url = URI.create("${prompter[Prompts.REPOSITORY_URL]}")
 
                         credentials {
                             username = System.getenv("GITHUB_USERNAME")
@@ -212,9 +207,8 @@ internal object Generator {
         }
     }
 
-    context(Prompter)
-    private fun FileWriter.writeGradleFiles() {
-        writeTo("gradle/wrapper/gradle-wrapper.properties", """
+    private fun writeGradleFiles() {
+        fileWriter.writeTo("gradle/wrapper/gradle-wrapper.properties", """
             #${ZonedDateTime.now().format(GradleWrapperPropertiesHeaderDateTimeFormatter())}
             distributionBase=GRADLE_USER_HOME
             distributionUrl=https\://services.gradle.org/distributions/gradle-7.5-bin.zip
@@ -228,14 +222,13 @@ internal object Generator {
             .getResourceAsStream("gradle-wrapper.jar")
             ?.reader()
             ?.readText()
-            ?.let { writeTo("gradle/wrapper/gradle-wrapper.jar", it) }
+            ?.let { fileWriter.writeTo("gradle/wrapper/gradle-wrapper.jar", it) }
     }
 
-    context(Prompter)
-    private fun FileWriter.writeAppFiles() {
+    private fun writeAppFiles() {
         writeManifestAt("app/src/main")
-        writeTo("app/.gitignore", "/build")
-        writeTo("app/build.gradle.kts", """
+        fileWriter.writeTo("app/.gitignore", "/build")
+        fileWriter.writeTo("app/build.gradle.kts", """
             plugins {
                 id("com.android.application")
                 id("kotlin-android")
@@ -244,14 +237,14 @@ internal object Generator {
             @Suppress("UnstableApiUsage")
             android {
                 namespace = Metadata.namespace("app")
-                compileSdk = Versions.${get(Prompts.PROJECT_NAME)}.SDK_COMPILE
+                compileSdk = Versions.${prompter[Prompts.PROJECT_NAME]}.SDK_COMPILE
 
                 defaultConfig {
                     applicationId = Metadata.GROUP
-                    minSdk = Versions.${get(Prompts.PROJECT_NAME)}.SDK_MIN
-                    targetSdk = Versions.${get(Prompts.PROJECT_NAME)}.SDK_TARGET
-                    versionCode = Versions.${get(Prompts.PROJECT_NAME)}.CODE
-                    versionName = Versions.${get(Prompts.PROJECT_NAME)}.NAME
+                    minSdk = Versions.${prompter[Prompts.PROJECT_NAME]}.SDK_MIN
+                    targetSdk = Versions.${prompter[Prompts.PROJECT_NAME]}.SDK_TARGET
+                    versionCode = Versions.${prompter[Prompts.PROJECT_NAME]}.CODE
+                    versionName = Versions.${prompter[Prompts.PROJECT_NAME]}.NAME
                     testInstrumentationRunner = Libraries.TEST_RUNNER
                 }
 
@@ -275,16 +268,15 @@ internal object Generator {
                 }
             }
         """)
-        writeTo("app/proguard-rules.pro", "")
+        fileWriter.writeTo("app/proguard-rules.pro", "")
     }
 
-    context(Prompter)
-    private fun FileWriter.writeLibraryFiles() {
-        val `package` = get(Prompts.GROUP_ID)!!.replace('/', '.')
-        Paths.get("$hyphenatedProjectName/src/main/java/$`package`").createDirectories()
-        writeManifestAt("$hyphenatedProjectName/src/main")
-        writeTo("$hyphenatedProjectName/.gitignore", "/build")
-        writeTo("$hyphenatedProjectName/build.gradle.kts", """
+    private fun writeLibraryFiles() {
+        val `package` = prompter[Prompts.GROUP_ID]!!.replace('/', '.')
+        Paths.get("${prompter.hyphenatedProjectName}/src/main/java/$`package`").createDirectories()
+        writeManifestAt("${prompter.hyphenatedProjectName}/src/main")
+        fileWriter.writeTo("${prompter.hyphenatedProjectName}/.gitignore", "/build")
+        fileWriter.writeTo("${prompter.hyphenatedProjectName}/build.gradle.kts", """
             plugins {
                 id("com.android.library")
                 id("kotlin-android")
@@ -293,14 +285,14 @@ internal object Generator {
 
             publishing {
                 repositories {
-                    $lowerCamelCasedProjectName()
+                    ${prompter.lowerCamelCasedProjectName}()
                 }
 
                 publications {
                     register<MavenPublication>(Variants.RELEASE) {
                         groupId = Metadata.GROUP
                         artifactId = Metadata.ARTIFACT
-                        version = Versions.${get(Prompts.PROJECT_NAME)}.NAME
+                        version = Versions.${prompter[Prompts.PROJECT_NAME]}.NAME
 
                         afterEvaluate {
                             from(components[Variants.RELEASE])
@@ -312,13 +304,13 @@ internal object Generator {
             @Suppress("UnstableApiUsage")
             android {
                 namespace = Metadata.NAMESPACE
-                compileSdk = Versions.${get(Prompts.PROJECT_NAME)}.SDK_COMPILE
+                compileSdk = Versions.${prompter[Prompts.PROJECT_NAME]}.SDK_COMPILE
 
                 defaultConfig {
-                    minSdk = Versions.${get(Prompts.PROJECT_NAME)}.SDK_MIN
+                    minSdk = Versions.${prompter[Prompts.PROJECT_NAME]}.SDK_MIN
             
                     @Suppress("DEPRECATION")
-                    targetSdk = Versions.${get(Prompts.PROJECT_NAME)}.SDK_TARGET
+                    targetSdk = Versions.${prompter[Prompts.PROJECT_NAME]}.SDK_TARGET
             
                     testInstrumentationRunner = Libraries.TEST_RUNNER
                 }
@@ -356,9 +348,8 @@ internal object Generator {
         """)
     }
 
-    context(Prompter)
-    private fun FileWriter.writeRootFiles() {
-        writeTo(".gitignore", """
+    private fun writeRootFiles() {
+        fileWriter.writeTo(".gitignore", """
             *.iml
             .gradle
             /local.properties
@@ -370,7 +361,7 @@ internal object Generator {
             .cxx
             local.properties
         """)
-        writeTo("build.gradle.kts", """
+        fileWriter.writeTo("build.gradle.kts", """
             buildscript {
                 repositories {
                     google()
@@ -396,7 +387,7 @@ internal object Generator {
         """)
 
         @Suppress("SpellCheckingInspection")
-        writeTo("gradle.properties", """
+        fileWriter.writeTo("gradle.properties", """
             org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8
             android.useAndroidX=true
             kotlin.code.style=official
@@ -404,7 +395,7 @@ internal object Generator {
         """)
 
         @Suppress("SpellCheckingInspection")
-        writeTo("gradlew", """
+        fileWriter.writeTo("gradlew", """
             #!/usr/bin/env sh
 
             #
@@ -593,7 +584,7 @@ internal object Generator {
         """)
 
         @Suppress("SpellCheckingInspection")
-        writeTo("gradlew.bat", """
+        fileWriter.writeTo("gradlew.bat", """
             @rem
             @rem Copyright 2015 the original author or authors.
             @rem
@@ -685,18 +676,18 @@ internal object Generator {
             :omega
         """)
 
-        writeTo(
+        fileWriter.writeTo(
             "local.properties",
             "sdk.dir=/Users/${System.getProperty("user.name")}/Library/Android/sdk"
         )
-        writeTo("settings.gradle.kts", """
-            rootProject.name = "${get(Prompts.PROJECT_NAME)}"
-            include(":app", ":$hyphenatedProjectName")
+        fileWriter.writeTo("settings.gradle.kts", """
+            rootProject.name = "${prompter[Prompts.PROJECT_NAME]}"
+            include(":app", ":${prompter.hyphenatedProjectName}")
         """)
     }
 
-    private fun FileWriter.writeManifestAt(directoryPath: String) {
-        writeTo("$directoryPath/AndroidManifest.xml", """
+    private fun writeManifestAt(directoryPath: String) {
+        fileWriter.writeTo("$directoryPath/AndroidManifest.xml", """
             <?xml version="1.0" encoding="utf-8"?>
             <manifest />
         """)
