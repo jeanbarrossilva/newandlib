@@ -1,6 +1,6 @@
 package com.jeanbarrossilva.newandlib
 
-import com.jeanbarrossilva.newandlib.generator.MainGenerator
+import com.jeanbarrossilva.newandlib.generator.LibraryGenerator
 import com.jeanbarrossilva.newandlib.prompter.prompt
 import com.jeanbarrossilva.newandlib.utils.currentPath
 
@@ -22,7 +22,7 @@ fun main() {
             "What is the URL of the repository to which the project will be uploaded?",
             ""
         )
-        MainGenerator(this).generate()
+        LibraryGenerator(this).generate()
         Runtime.getRuntime().exec("chmod +x gradlew")
         Runtime.getRuntime().exec("studio ${get(Prompts.PROJECT_PATH)}")
         println("Done!")

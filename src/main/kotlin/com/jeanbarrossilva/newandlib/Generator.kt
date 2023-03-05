@@ -6,21 +6,21 @@ import com.jeanbarrossilva.newandlib.prompter.hyphenatedProjectName
 import com.jeanbarrossilva.newandlib.prompter.lowerCamelCasedProjectName
 import com.jeanbarrossilva.newandlib.utils.GradleWrapperPropertiesHeaderDateTimeFormatter
 import com.jeanbarrossilva.newandlib.writer.FileWriter
-import java.nio.file.Paths
 import java.time.ZonedDateTime
-import kotlin.io.path.createDirectories
 
 internal abstract class Generator {
+    protected val fileWriter
+        get() = FileWriter(prompter[Prompts.PROJECT_PATH]!!)
+
     protected abstract val prompter: Prompter
-    protected abstract val fileWriter: FileWriter
 
     fun generate() {
         writeWorkflowFiles()
         writeBuildSrcFiles()
         writeGradleFiles()
         writeAppFiles()
-        writeLibraryFiles()
         writeRootFiles()
+        onGenerate()
     }
 
     private fun writeWorkflowFiles() {
@@ -226,7 +226,7 @@ internal abstract class Generator {
     }
 
     private fun writeAppFiles() {
-        writeManifestAt("app/src/main")
+        generateManifestAt("app/src/main")
         fileWriter.writeTo("app/.gitignore", "/build")
         fileWriter.writeTo("app/build.gradle.kts", """
             plugins {
@@ -269,83 +269,6 @@ internal abstract class Generator {
             }
         """)
         fileWriter.writeTo("app/proguard-rules.pro", "")
-    }
-
-    private fun writeLibraryFiles() {
-        val `package` = prompter[Prompts.GROUP_ID]!!.replace('/', '.')
-        Paths.get("${prompter.hyphenatedProjectName}/src/main/java/$`package`").createDirectories()
-        writeManifestAt("${prompter.hyphenatedProjectName}/src/main")
-        fileWriter.writeTo("${prompter.hyphenatedProjectName}/.gitignore", "/build")
-        fileWriter.writeTo("${prompter.hyphenatedProjectName}/build.gradle.kts", """
-            plugins {
-                id("com.android.library")
-                id("kotlin-android")
-                `maven-publish`
-            }
-
-            publishing {
-                repositories {
-                    ${prompter.lowerCamelCasedProjectName}()
-                }
-
-                publications {
-                    register<MavenPublication>(Variants.RELEASE) {
-                        groupId = Metadata.GROUP
-                        artifactId = Metadata.ARTIFACT
-                        version = Versions.${prompter[Prompts.PROJECT_NAME]}.NAME
-
-                        afterEvaluate {
-                            from(components[Variants.RELEASE])
-                        }
-                    }
-                }
-            }
-
-            @Suppress("UnstableApiUsage")
-            android {
-                namespace = Metadata.NAMESPACE
-                compileSdk = Versions.${prompter[Prompts.PROJECT_NAME]}.SDK_COMPILE
-
-                defaultConfig {
-                    minSdk = Versions.${prompter[Prompts.PROJECT_NAME]}.SDK_MIN
-            
-                    @Suppress("DEPRECATION")
-                    targetSdk = Versions.${prompter[Prompts.PROJECT_NAME]}.SDK_TARGET
-            
-                    testInstrumentationRunner = Libraries.TEST_RUNNER
-                }
-
-                publishing {
-                    singleVariant(Variants.RELEASE) {
-                        withSourcesJar()
-                        withJavadocJar()
-                    }
-                }
-
-                buildTypes {
-                    getByName(Variants.RELEASE) {
-                        isMinifyEnabled = false
-                        proguardFiles(
-                            getDefaultProguardFile("proguard-android-optimize.txt"),
-                            "proguard-rules.pro"
-                        )
-                    }
-                }
-
-                buildFeatures {
-                    viewBinding = true
-                }
-
-                compileOptions {
-                    sourceCompatibility = Versions.java
-                    targetCompatibility = Versions.java
-                }
-
-                kotlinOptions {
-                    jvmTarget = Versions.java.toString()
-                }
-            }
-        """)
     }
 
     private fun writeRootFiles() {
@@ -686,7 +609,9 @@ internal abstract class Generator {
         """)
     }
 
-    private fun writeManifestAt(directoryPath: String) {
+    protected abstract fun onGenerate()
+
+    protected fun generateManifestAt(directoryPath: String) {
         fileWriter.writeTo("$directoryPath/AndroidManifest.xml", """
             <?xml version="1.0" encoding="utf-8"?>
             <manifest />
