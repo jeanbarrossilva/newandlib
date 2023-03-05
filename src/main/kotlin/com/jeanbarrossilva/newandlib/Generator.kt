@@ -113,11 +113,15 @@ internal object Generator {
             }
         """)
         writeTo("buildSrc/src/main/java/Versions.kt", """
+            import org.gradle.api.JavaVersion
+
             object Versions {
                 const val AURELIUS = "1.2.1"
                 const val GRADLE = "7.4.1"
                 const val KOTLIN = "1.8.10"
                 const val TEST_RUNNER = "1.5.2"
+
+                val java = JavaVersion.VERSION_17
 
                 object ${get(Prompts.PROJECT_NAME)} {
                     const val CODE = 0
