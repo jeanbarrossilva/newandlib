@@ -4,6 +4,10 @@ import com.google.common.base.CaseFormat
 import com.jeanbarrossilva.newandlib.Prompts
 import com.jeanbarrossilva.newandlib.prompter.system.SystemPrompter
 
+/** Whether or not we've been provided a repository URL. **/
+internal val Prompter.hasRepositoryUrl
+    get() = get(Prompts.REPOSITORY_URL)!!.isNotBlank()
+
 /** Hyphenated value input into [Prompts.PROJECT_NAME]. **/
 internal val Prompter.hyphenatedProjectName
     get() = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_HYPHEN, get(Prompts.PROJECT_NAME)!!)

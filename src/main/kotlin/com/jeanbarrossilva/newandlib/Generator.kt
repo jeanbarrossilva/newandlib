@@ -1,6 +1,7 @@
 package com.jeanbarrossilva.newandlib
 
 import com.jeanbarrossilva.newandlib.prompter.Prompter
+import com.jeanbarrossilva.newandlib.prompter.hasRepositoryUrl
 import com.jeanbarrossilva.newandlib.prompter.hyphenatedProjectName
 import com.jeanbarrossilva.newandlib.prompter.lowerCamelCasedProjectName
 import com.jeanbarrossilva.newandlib.utils.GradleWrapperPropertiesHeaderDateTimeFormatter
@@ -14,11 +15,115 @@ internal object Generator {
     context(Prompter)
     fun generate() {
         at(get(Prompts.PROJECT_PATH)!!) {
+            writeWorkflowFiles()
             writeBuildSrcFiles()
             writeGradleFiles()
             writeAppFiles()
             writeLibraryFiles()
             writeRootFiles()
+        }
+    }
+
+    context(Prompter)
+    private fun FileWriter.writeWorkflowFiles() {
+        writeTo(".github/workflows/gradle.yml", """
+            name: Java CI with Gradle
+            on:
+              push:
+                branches: [ "main" ]
+              pull_request:
+                branches: [ "main" ]
+            permissions:
+              contents: read
+            jobs:
+              build:
+                runs-on: ubuntu-latest
+                steps:
+                  - uses: actions/checkout@v3
+
+                  - name: Set up JDK 11
+                    uses: actions/setup-java@v3
+                    with:
+                      java-version: '11'
+                      distribution: 'temurin'
+
+                  - name: Build with Gradle
+                    uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+                    with:
+                      arguments: build
+        """)
+        writeTo(".github/workflows/instrumentation.yml", """
+            name: Instrumented tests
+            on:
+              push:
+                branches: [ "main" ]
+              pull_request:
+                branches: [ "main" ]
+            permissions:
+              contents: read
+            jobs:
+              test:
+                runs-on: macos-latest
+                steps:
+                  - name: Check out
+                    uses: actions/checkout@v3
+
+                  - name: Set up Java 11
+                    uses: actions/setup-java@v1
+                    with:
+                      java-version: 11
+
+                  - name: Run instrumented tests
+                    uses: reactivecircus/android-emulator-runner@v2.27.0
+                    with:
+                      api-level: 31
+                      arch: x86_64
+                      disable-animations: true
+                      disk-size: 2000M
+                      heap-size: 600M
+                      script: ./gradlew connectedCheck
+        """)
+        writePublishingWorkflowFile()
+    }
+
+    context(Prompter)
+    private fun FileWriter.writePublishingWorkflowFile() {
+        if (hasRepositoryUrl) {
+            writeTo(".github/workflows/publishing.yml", """
+                name: Publishing
+                on:
+                  release:
+                    types: [created]
+                jobs:
+                  build:
+                    runs-on: ubuntu-latest
+                    permissions:
+                      contents: read
+                      packages: write
+                    steps:
+                      - uses: actions/checkout@v3
+
+                      - name: Set up Java 11
+                        uses: actions/setup-java@v3
+                        with:
+                          java-version: '11'
+                          distribution: 'temurin'
+                          server-id: github
+                          settings-path: ${'$'}{{ github.workspace }}
+
+                      - name: Build
+                        uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+                        with:
+                          arguments: build
+
+                      - name: Publish
+                        env:
+                          GITHUB_USERNAME: ${'$'}{{ github.actor }}
+                          GITHUB_TOKEN: ${'$'}{{ secrets.GITHUB_TOKEN }}
+                        uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+                        with:
+                          arguments: publish
+            """)
         }
     }
 
@@ -56,7 +161,6 @@ internal object Generator {
             import org.gradle.api.JavaVersion
 
             object Versions {
-                const val AURELIUS = "1.2.1"
                 const val GRADLE = "7.4.1"
                 const val KOTLIN = "1.8.10"
                 const val TEST_RUNNER = "1.5.2"
@@ -85,65 +189,25 @@ internal object Generator {
 
     context(Prompter)
     private fun FileWriter.writeBuildSrcExtensionFiles() {
-        val hasRepositoryUrl = get(Prompts.REPOSITORY_URL)!!.isNotBlank()
         if (hasRepositoryUrl) {
-            writeTo("buildSrc/src/main/java/utils/Properties.extensions.kt", """
-            import java.io.File
-            import java.io.InputStreamReader
-            import java.util.Properties
+            writeTo("buildSrc/src/main/java/utils/RepositoryHandler.extensions.kt", """
+                import java.net.URI
+                import org.gradle.api.Project
+                import org.gradle.api.artifacts.dsl.RepositoryHandler
+                import org.gradle.api.artifacts.repositories.MavenArtifactRepository
 
-            /**
-             * Creates [Properties] according to the `local.properties` file.
-             *
-             * @param root Directory in which the `local.properties` file is.
-             **/
-            fun localProperties(root: File): Properties {
-                val file = File(root, "local.properties")
-                return Properties().apply { tryToLoad(file) }
-            }
+                /** Adds the repository in which ${get(Prompts.PROJECT_NAME)} is located. **/
+                fun RepositoryHandler.$lowerCamelCasedProjectName(): MavenArtifactRepository {
+                    return maven {
+                        url = URI.create("${get(Prompts.REPOSITORY_URL)}")
 
-            /**
-             * Loads the given [file] into these [Properties].
-             *
-             * @param file [File] to be loaded.
-             **/
-            private fun Properties.load(file: File) {
-                file.inputStream().reader().use {
-                    load(it)
-                }
-            }
-
-            /**
-             * Loads the given [file] into these [Properties] if it's a normal file.
-             *
-             * @param file [File] to be loaded.
-             **/
-            private fun Properties.tryToLoad(file: File) {
-                if (file.isFile) {
-                    load(file)
-                }
-            }
-        """)
-        writeTo("buildSrc/src/main/java/utils/RepositoryHandler.extensions.kt", """
-            import java.net.URI
-            import org.gradle.api.Project
-            import org.gradle.api.artifacts.dsl.RepositoryHandler
-            import org.gradle.api.artifacts.repositories.MavenArtifactRepository
-
-            /** Adds the repository in which ${get(Prompts.PROJECT_NAME)} is located. **/
-            fun RepositoryHandler.$lowerCamelCasedProjectName(): MavenArtifactRepository {
-                return maven {
-                    url = URI.create("${get(Prompts.REPOSITORY_URL)}")
-
-                    credentials {
-                        with(localProperties(project.rootDir)) {
-                            username = getProperty("github.username") ?: System.getenv("GITHUB_USERNAME")
-                            password = getProperty("github.token") ?: System.getenv("GITHUB_TOKEN")
+                        credentials {
+                            username = System.getenv("GITHUB_USERNAME")
+                            password = System.getenv("GITHUB_TOKEN")
                         }
                     }
                 }
-            }
-        """)
+            """)
         }
     }
 
@@ -319,7 +383,6 @@ internal object Generator {
 
             allprojects {
                 repositories {
-                    aurelius(project)
                     google()
                     mavenCentral()
                 }
