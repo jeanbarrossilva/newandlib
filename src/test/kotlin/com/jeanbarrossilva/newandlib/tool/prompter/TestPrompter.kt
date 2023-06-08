@@ -1,4 +1,4 @@
-package com.jeanbarrossilva.newandlib.prompter
+package com.jeanbarrossilva.newandlib.tool.prompter
 
 internal class TestPrompter : Prompter() {
     private var response: String? = null

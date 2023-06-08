@@ -1,6 +1,6 @@
-package com.jeanbarrossilva.newandlib.prompter
+package com.jeanbarrossilva.newandlib.tool.prompter
 
-internal abstract class Prompter {
+abstract class Prompter internal constructor() {
     /** [HashMap] whose keys are the prompts' keys and values are their response. **/
     private val prompts = hashMapOf<String, Any?>()
 
@@ -22,7 +22,7 @@ internal abstract class Prompter {
      *
      * @param key Key of the prompt whose response will be obtained.
      **/
-    fun get(key: String): String? {
+    operator fun get(key: String): String? {
         return get<String>(key)
     }
 

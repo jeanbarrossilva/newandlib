@@ -1,6 +1,6 @@
 package com.jeanbarrossilva.newandlib
 
-import com.jeanbarrossilva.newandlib.prompter.prompt
+import com.jeanbarrossilva.newandlib.tool.prompter.prompt
 import com.jeanbarrossilva.newandlib.utils.currentPath
 
 fun main() {

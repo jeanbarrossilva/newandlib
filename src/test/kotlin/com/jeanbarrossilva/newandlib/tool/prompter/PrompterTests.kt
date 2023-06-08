@@ -1,4 +1,4 @@
-package com.jeanbarrossilva.newandlib.prompter
+package com.jeanbarrossilva.newandlib.tool.prompter
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest

@@ -1,6 +1,6 @@
-package com.jeanbarrossilva.newandlib.prompter.system
+package com.jeanbarrossilva.newandlib.tool.prompter.system
 
-import com.jeanbarrossilva.newandlib.utils.`if`
+import com.jeanbarrossilva.newandlib.tool.extensions.`if`
 
 internal object QuestionFormatter {
     fun format(question: String, default: String?): String {

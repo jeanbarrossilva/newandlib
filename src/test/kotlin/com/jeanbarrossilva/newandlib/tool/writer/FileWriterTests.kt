@@ -1,4 +1,4 @@
-package com.jeanbarrossilva.newandlib.writer
+package com.jeanbarrossilva.newandlib.tool.writer
 
 import com.jeanbarrossilva.newandlib.utils.currentPath
 import java.nio.file.Paths

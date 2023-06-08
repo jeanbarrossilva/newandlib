@@ -1,11 +1,11 @@
-package com.jeanbarrossilva.newandlib.writer
+package com.jeanbarrossilva.newandlib.tool.writer
 
-import com.jeanbarrossilva.newandlib.utils.`if`
+import com.jeanbarrossilva.newandlib.tool.extensions.`if`
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 
-internal class FileWriter(private val origin: String) {
+class FileWriter internal constructor(private val origin: String) {
     fun writeTo(pathValue: String, content: String) {
         val path = absolute(pathValue)
         Files.createDirectories(path.parent)

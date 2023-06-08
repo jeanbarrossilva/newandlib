@@ -1,12 +1,12 @@
 package com.jeanbarrossilva.newandlib
 
-import com.jeanbarrossilva.newandlib.prompter.Prompter
-import com.jeanbarrossilva.newandlib.prompter.hasRepositoryUrl
-import com.jeanbarrossilva.newandlib.prompter.hyphenatedProjectName
-import com.jeanbarrossilva.newandlib.prompter.lowerCamelCasedProjectName
+import com.jeanbarrossilva.newandlib.tool.prompter.Prompter
+import com.jeanbarrossilva.newandlib.tool.prompter.hasRepositoryUrl
+import com.jeanbarrossilva.newandlib.tool.prompter.hyphenatedProjectName
+import com.jeanbarrossilva.newandlib.tool.prompter.lowerCamelCasedProjectName
 import com.jeanbarrossilva.newandlib.utils.GradleWrapperPropertiesHeaderDateTimeFormatter
-import com.jeanbarrossilva.newandlib.writer.FileWriter
-import com.jeanbarrossilva.newandlib.writer.at
+import com.jeanbarrossilva.newandlib.tool.writer.FileWriter
+import com.jeanbarrossilva.newandlib.tool.writer.at
 import java.nio.file.Paths
 import java.time.ZonedDateTime
 import kotlin.io.path.createDirectories
