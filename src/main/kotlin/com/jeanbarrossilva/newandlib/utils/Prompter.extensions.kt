@@ -2,8 +2,8 @@ package com.jeanbarrossilva.newandlib.utils
 
 import com.google.common.base.CaseFormat
 import com.jeanbarrossilva.newandlib.Prompts
-import com.jeanbarrossilva.newandlib.prompt.ProjectNamePrompt
-import com.jeanbarrossilva.newandlib.prompt.RepositoryUrlPrompt
+import com.jeanbarrossilva.newandlib.type.library.prompt.ProjectNamePrompt
+import com.jeanbarrossilva.newandlib.type.library.prompt.RepositoryUrlPrompt
 import com.jeanbarrossilva.newandlib.tool.prompter.Prompter
 
 /** Whether we've been provided a repository URL. **/

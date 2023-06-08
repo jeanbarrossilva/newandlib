@@ -1,10 +1,10 @@
 package com.jeanbarrossilva.newandlib
 
-import com.jeanbarrossilva.newandlib.prompt.GroupIDPrompt
-import com.jeanbarrossilva.newandlib.prompt.ProjectNamePrompt
-import com.jeanbarrossilva.newandlib.prompt.ProjectPathPrompt
-import com.jeanbarrossilva.newandlib.prompt.ProjectTypeNamespacePrompt
-import com.jeanbarrossilva.newandlib.prompt.RepositoryUrlPrompt
+import com.jeanbarrossilva.newandlib.type.library.prompt.GroupIDPrompt
+import com.jeanbarrossilva.newandlib.type.library.prompt.ProjectNamePrompt
+import com.jeanbarrossilva.newandlib.type.library.prompt.ProjectPathPrompt
+import com.jeanbarrossilva.newandlib.type.library.prompt.ProjectTypeNamespacePrompt
+import com.jeanbarrossilva.newandlib.type.library.prompt.RepositoryUrlPrompt
 import com.jeanbarrossilva.newandlib.tool.prompter.prompt
 import com.jeanbarrossilva.newandlib.utils.currentPath
 

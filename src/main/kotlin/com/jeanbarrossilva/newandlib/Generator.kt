@@ -1,9 +1,9 @@
 package com.jeanbarrossilva.newandlib
 
-import com.jeanbarrossilva.newandlib.prompt.GroupIDPrompt
-import com.jeanbarrossilva.newandlib.prompt.ProjectNamePrompt
-import com.jeanbarrossilva.newandlib.prompt.ProjectPathPrompt
-import com.jeanbarrossilva.newandlib.prompt.RepositoryUrlPrompt
+import com.jeanbarrossilva.newandlib.type.library.prompt.GroupIDPrompt
+import com.jeanbarrossilva.newandlib.type.library.prompt.ProjectNamePrompt
+import com.jeanbarrossilva.newandlib.type.library.prompt.ProjectPathPrompt
+import com.jeanbarrossilva.newandlib.type.library.prompt.RepositoryUrlPrompt
 import com.jeanbarrossilva.newandlib.tool.file.writer.FileWriter
 import com.jeanbarrossilva.newandlib.tool.file.writer.at
 import com.jeanbarrossilva.newandlib.tool.prompter.Prompter
