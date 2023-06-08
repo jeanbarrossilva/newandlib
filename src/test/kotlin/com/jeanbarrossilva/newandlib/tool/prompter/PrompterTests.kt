@@ -1,5 +1,7 @@
 package com.jeanbarrossilva.newandlib.tool.prompter
 
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
@@ -7,45 +9,50 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 internal class PrompterTests {
-    private val TestPrompter.response
-        get() = get(PROMPT_KEY)
+    private val prompter = TestPrompter()
+    private val prompt = Prompt.empty
+
+    private val input
+        get() = prompter[prompt]
+
+    @AfterTest
+    fun tearDown() {
+        prompter.input(null)
+    }
 
     @Test
     @OptIn(ExperimentalCoroutinesApi::class)
-    fun `GIVEN a null response WHEN responding with it THEN the prompt is repeated`() {
+    fun `GIVEN a null input WHEN responding with it THEN the prompt is repeated`() {
         assertFailsWith<StackOverflowError> {
-            promptWith(TestPrompter()) {
-                respond(null)
-                runTest { prompt() }
+            runTest {
+                prompt()
             }
         }
     }
 
     @Test
     @OptIn(ExperimentalCoroutinesApi::class)
-    fun `GIVEN a null response WHEN responding with it to a prompt with a default value THEN it is not repeated`() {
-        promptWith(TestPrompter()) {
-            respond(null)
-            runTest { prompt(default = "default-response") }
-            assertEquals("default-response", response)
-        }
+    fun `GIVEN a null input WHEN responding with it to a prompt with a default value THEN it is not repeated`() {
+        runTest { prompt(default = "default-input") }
+        assertEquals("default-input", input)
     }
 
     @Test
     @OptIn(ExperimentalCoroutinesApi::class)
-    fun `GIVEN a response WHEN responding with it THEN it is saved`() {
-        promptWith(TestPrompter()) {
-            respond("response")
-            runTest { prompt() }
-            assertEquals("response", response)
-        }
+    fun `GIVEN an input WHEN inputting it THEN it is saved`() {
+        prompter.input("input")
+        runTest { prompt() }
+        assertEquals("input", input)
     }
 
-    private fun TestPrompter.prompt(key: String = PROMPT_KEY, default: String? = null): String {
-        return prompt(key, prompt = "", default)
+    @Test
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun `GIVEN an input constrained to options WHEN inputting one of them THEN it is saved`() {
+        prompter.input("red")
+        runTest {  }
     }
 
-    companion object {
-        private const val PROMPT_KEY = "prompt"
+    private fun prompt(default: String? = null): String {
+        return prompter.prompt(prompt, default)
     }
 }

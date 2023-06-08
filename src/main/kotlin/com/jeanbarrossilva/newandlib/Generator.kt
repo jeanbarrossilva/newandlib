@@ -1,12 +1,16 @@
 package com.jeanbarrossilva.newandlib
 
+import com.jeanbarrossilva.newandlib.prompt.GroupIDPrompt
+import com.jeanbarrossilva.newandlib.prompt.ProjectNamePrompt
+import com.jeanbarrossilva.newandlib.prompt.ProjectPathPrompt
+import com.jeanbarrossilva.newandlib.prompt.RepositoryUrlPrompt
 import com.jeanbarrossilva.newandlib.tool.prompter.Prompter
-import com.jeanbarrossilva.newandlib.tool.prompter.hasRepositoryUrl
-import com.jeanbarrossilva.newandlib.tool.prompter.hyphenatedProjectName
-import com.jeanbarrossilva.newandlib.tool.prompter.lowerCamelCasedProjectName
 import com.jeanbarrossilva.newandlib.utils.GradleWrapperPropertiesHeaderDateTimeFormatter
 import com.jeanbarrossilva.newandlib.tool.writer.FileWriter
 import com.jeanbarrossilva.newandlib.tool.writer.at
+import com.jeanbarrossilva.newandlib.utils.hasRepositoryUrl
+import com.jeanbarrossilva.newandlib.utils.hyphenatedProjectName
+import com.jeanbarrossilva.newandlib.utils.lowerCamelCasedProjectName
 import java.nio.file.Paths
 import java.time.ZonedDateTime
 import kotlin.io.path.createDirectories
@@ -14,7 +18,7 @@ import kotlin.io.path.createDirectories
 internal object Generator {
     context(Prompter)
     fun generate() {
-        at(get(Prompts.PROJECT_PATH)!!) {
+        at(get(ProjectPathPrompt)!!) {
             writeWorkflowFiles()
             writeBuildSrcFiles()
             writeGradleFiles()
@@ -137,7 +141,7 @@ internal object Generator {
         """)
         writeTo("buildSrc/src/main/java/Metadata.kt", """
             object Metadata {
-                const val GROUP = "${get(Prompts.GROUP_ID)}"
+                const val GROUP = "${get(GroupIDPrompt)}"
                 const val ARTIFACT = "$hyphenatedProjectName"
                 const val NAMESPACE = GROUP
 
@@ -167,7 +171,7 @@ internal object Generator {
 
                 val java = JavaVersion.VERSION_17
 
-                object ${get(Prompts.PROJECT_NAME)} {
+                object ${get(ProjectNamePrompt)} {
                     const val CODE = 1
                     const val NAME = "1.0.0"
                     const val SDK_COMPILE = 33
@@ -197,10 +201,10 @@ internal object Generator {
                 import org.gradle.api.artifacts.dsl.RepositoryHandler
                 import org.gradle.api.artifacts.repositories.MavenArtifactRepository
 
-                /** Adds the repository in which ${get(Prompts.PROJECT_NAME)} is located. **/
+                /** Adds the repository in which ${get(ProjectNamePrompt)} is located. **/
                 fun RepositoryHandler.$lowerCamelCasedProjectName(): MavenArtifactRepository {
                     return maven {
-                        url = URI.create("${get(Prompts.REPOSITORY_URL)}")
+                        url = URI.create("${get(RepositoryUrlPrompt)}")
 
                         credentials {
                             username = System.getenv("GITHUB_USERNAME")
@@ -244,14 +248,14 @@ internal object Generator {
             @Suppress("UnstableApiUsage")
             android {
                 namespace = Metadata.namespace("app")
-                compileSdk = Versions.${get(Prompts.PROJECT_NAME)}.SDK_COMPILE
+                compileSdk = Versions.${get(ProjectNamePrompt)}.SDK_COMPILE
 
                 defaultConfig {
                     applicationId = Metadata.GROUP
-                    minSdk = Versions.${get(Prompts.PROJECT_NAME)}.SDK_MIN
-                    targetSdk = Versions.${get(Prompts.PROJECT_NAME)}.SDK_TARGET
-                    versionCode = Versions.${get(Prompts.PROJECT_NAME)}.CODE
-                    versionName = Versions.${get(Prompts.PROJECT_NAME)}.NAME
+                    minSdk = Versions.${get(ProjectNamePrompt)}.SDK_MIN
+                    targetSdk = Versions.${get(ProjectNamePrompt)}.SDK_TARGET
+                    versionCode = Versions.${get(ProjectNamePrompt)}.CODE
+                    versionName = Versions.${get(ProjectNamePrompt)}.NAME
                     testInstrumentationRunner = Libraries.TEST_RUNNER
                 }
 
@@ -280,7 +284,7 @@ internal object Generator {
 
     context(Prompter)
     private fun FileWriter.writeLibraryFiles() {
-        val `package` = get(Prompts.GROUP_ID)!!.replace('/', '.')
+        val `package` = get(GroupIDPrompt)!!.replace('/', '.')
         Paths.get("$hyphenatedProjectName/src/main/java/$`package`").createDirectories()
         writeManifestAt("$hyphenatedProjectName/src/main")
         writeTo("$hyphenatedProjectName/.gitignore", "/build")
@@ -300,7 +304,7 @@ internal object Generator {
                     register<MavenPublication>(Variants.RELEASE) {
                         groupId = Metadata.GROUP
                         artifactId = Metadata.ARTIFACT
-                        version = Versions.${get(Prompts.PROJECT_NAME)}.NAME
+                        version = Versions.${get(ProjectNamePrompt)}.NAME
 
                         afterEvaluate {
                             from(components[Variants.RELEASE])
@@ -312,13 +316,13 @@ internal object Generator {
             @Suppress("UnstableApiUsage")
             android {
                 namespace = Metadata.NAMESPACE
-                compileSdk = Versions.${get(Prompts.PROJECT_NAME)}.SDK_COMPILE
+                compileSdk = Versions.${get(ProjectNamePrompt)}.SDK_COMPILE
 
                 defaultConfig {
-                    minSdk = Versions.${get(Prompts.PROJECT_NAME)}.SDK_MIN
+                    minSdk = Versions.${get(ProjectNamePrompt)}.SDK_MIN
             
                     @Suppress("DEPRECATION")
-                    targetSdk = Versions.${get(Prompts.PROJECT_NAME)}.SDK_TARGET
+                    targetSdk = Versions.${get(ProjectNamePrompt)}.SDK_TARGET
             
                     testInstrumentationRunner = Libraries.TEST_RUNNER
                 }
@@ -690,7 +694,7 @@ internal object Generator {
             "sdk.dir=/Users/${System.getProperty("user.name")}/Library/Android/sdk"
         )
         writeTo("settings.gradle.kts", """
-            rootProject.name = "${get(Prompts.PROJECT_NAME)}"
+            rootProject.name = "${get(ProjectNamePrompt)}"
             include(":app", ":$hyphenatedProjectName")
         """)
     }

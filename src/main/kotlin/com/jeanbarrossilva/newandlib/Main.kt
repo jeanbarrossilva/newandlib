@@ -1,5 +1,10 @@
 package com.jeanbarrossilva.newandlib
 
+import com.jeanbarrossilva.newandlib.prompt.GroupIDPrompt
+import com.jeanbarrossilva.newandlib.prompt.ProjectNamePrompt
+import com.jeanbarrossilva.newandlib.prompt.ProjectPathPrompt
+import com.jeanbarrossilva.newandlib.prompt.ProjectTypeNamespacePrompt
+import com.jeanbarrossilva.newandlib.prompt.RepositoryUrlPrompt
 import com.jeanbarrossilva.newandlib.tool.prompter.prompt
 import com.jeanbarrossilva.newandlib.utils.currentPath
 
@@ -8,22 +13,14 @@ fun main() {
         @Suppress("SpellCheckingInspection")
         println("Welcome to newandlib!\n")
 
-        prompt(Prompts.PROJECT_NAME, "What's the name of the project?")
-        prompt(Prompts.GROUP_ID, "What's the group ID?")
-        prompt(
-            Prompts.LIBRARY_MODULE_NAMESPACE,
-            "What's the namespace of the library module?",
-            get(Prompts.GROUP_ID)
-        )
-        prompt(Prompts.PROJECT_PATH, "Where would you like the project to be created?", currentPath)
-        prompt(
-            Prompts.REPOSITORY_URL,
-            "What is the URL of the repository to which the project will be uploaded?",
-            ""
-        )
+        prompt(ProjectNamePrompt)
+        prompt(GroupIDPrompt)
+        prompt(ProjectTypeNamespacePrompt, default = get(GroupIDPrompt))
+        prompt(ProjectPathPrompt, default = currentPath)
+        prompt(RepositoryUrlPrompt, default = "")
         Generator.generate()
         Runtime.getRuntime().exec("chmod +x gradlew")
-        Runtime.getRuntime().exec("studio ${get(Prompts.PROJECT_PATH)}")
+        Runtime.getRuntime().exec("studio ${get(ProjectPathPrompt)}")
         println("Done!")
     }
 }

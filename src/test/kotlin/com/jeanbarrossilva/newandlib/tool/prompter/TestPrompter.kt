@@ -1,13 +1,13 @@
 package com.jeanbarrossilva.newandlib.tool.prompter
 
 internal class TestPrompter : Prompter() {
-    private var response: String? = null
+    private var input: String? = null
 
-    override fun onPrompt(key: String, prompt: String, default: String?): String? {
-        return response
+    override fun onPrompt(prompt: Prompt, default: String?): String? {
+        return input
     }
 
-    fun respond(response: String?) {
-        this.response = response
+    fun input(input: String?) {
+        this.input = input
     }
 }
