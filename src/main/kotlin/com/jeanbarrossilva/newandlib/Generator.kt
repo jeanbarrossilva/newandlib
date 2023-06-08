@@ -4,10 +4,10 @@ import com.jeanbarrossilva.newandlib.prompt.GroupIDPrompt
 import com.jeanbarrossilva.newandlib.prompt.ProjectNamePrompt
 import com.jeanbarrossilva.newandlib.prompt.ProjectPathPrompt
 import com.jeanbarrossilva.newandlib.prompt.RepositoryUrlPrompt
+import com.jeanbarrossilva.newandlib.tool.file.writer.FileWriter
+import com.jeanbarrossilva.newandlib.tool.file.writer.at
 import com.jeanbarrossilva.newandlib.tool.prompter.Prompter
 import com.jeanbarrossilva.newandlib.utils.GradleWrapperPropertiesHeaderDateTimeFormatter
-import com.jeanbarrossilva.newandlib.tool.writer.FileWriter
-import com.jeanbarrossilva.newandlib.tool.writer.at
 import com.jeanbarrossilva.newandlib.utils.hasRepositoryUrl
 import com.jeanbarrossilva.newandlib.utils.hyphenatedProjectName
 import com.jeanbarrossilva.newandlib.utils.lowerCamelCasedProjectName

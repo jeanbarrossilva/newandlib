@@ -1,4 +1,4 @@
-package com.jeanbarrossilva.newandlib.tool.writer
+package com.jeanbarrossilva.newandlib.tool.file.writer
 
 import com.jeanbarrossilva.newandlib.tool.extensions.`if`
 import java.nio.file.Files
