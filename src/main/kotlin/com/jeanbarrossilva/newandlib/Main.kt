@@ -18,7 +18,7 @@ fun main() {
 
         prompt(ProjectNamePrompt)
         prompt(GroupIDPrompt)
-        prompt(ProjectTypeNamespacePrompt, default = get(GroupIDPrompt))
+        prompt(ProjectTypeNamespacePrompt, default = get<GroupIDPrompt>())
         prompt(ProjectPathPrompt, default = currentPath)
         prompt(RepositoryUrlPrompt, default = "")
         LibraryProjectGenerator().generate(this)
@@ -29,7 +29,7 @@ fun main() {
 
 private fun Prompter.tryToOpenAndroidStudio(processBuilder: ProcessBuilder) {
     try {
-        processBuilder.command("studio", "${get(ProjectPathPrompt)}")
+        processBuilder.command("studio", "${get<ProjectPathPrompt>()}")
     } catch (_: IOException) {
     }
 }

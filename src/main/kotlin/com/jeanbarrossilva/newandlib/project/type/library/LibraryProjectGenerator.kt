@@ -12,7 +12,7 @@ import com.jeanbarrossilva.newandlib.tool.prompter.Prompter
 
 internal class LibraryProjectGenerator : ProjectGenerator() {
     override fun onGenerate(prompter: Prompter, project: Project) {
-        val repositoryUrl = prompter.require(RepositoryUrlPrompt)
+        val repositoryUrl = prompter.require<RepositoryUrlPrompt>()
         ModuleDirectory(project.path, project).write()
         PublishingWorkflowFile(project.path + at(".github") + at("workflows")).write()
         RepositoryHandlerExtensionsFile(

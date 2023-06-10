@@ -13,7 +13,7 @@ internal class PrompterTests {
     private val prompt = Prompt.empty
 
     private val input
-        get() = prompter[prompt]
+        get() = prompter.get(prompt::class)
 
     @AfterTest
     fun tearDown() {
@@ -55,7 +55,7 @@ internal class PrompterTests {
     @Test
     fun `GIVEN unprovided input to a prompt WHEN requiring it THEN it throws`() {
         assertThrows<IllegalStateException> {
-            prompter.require(prompt)
+            prompter.require(prompt::class)
         }
     }
 
