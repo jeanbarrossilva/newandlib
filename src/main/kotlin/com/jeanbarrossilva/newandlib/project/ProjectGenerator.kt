@@ -10,13 +10,12 @@ import com.jeanbarrossilva.newandlib.tool.prompter.Prompter
 
 internal abstract class ProjectGenerator {
     fun generate(prompter: Prompter) {
-        val pathValue = prompter[ProjectPathPrompt] ?: throw IllegalStateException("Project path cannot be null.")
+        val pathValue = prompter.require(ProjectPathPrompt)
         val path = at(pathValue)
-        val projectName = prompter[ProjectNamePrompt] ?: throw IllegalStateException("Project name cannot be null.")
+        val projectName = prompter.require(ProjectNamePrompt)
         val naming = Naming from projectName
-        val groupID = prompter[GroupIDPrompt] ?: throw IllegalStateException("Group ID cannot be null.")
-        val packageName = prompter[GroupIDPrompt] ?: throw IllegalStateException("Group ID cannot be null.")
-        val project = Project(path, naming, groupID, Package named packageName)
+        val groupID = prompter.require(GroupIDPrompt)
+        val project = Project(path, naming, groupID, Package named groupID)
         val root = RootDirectory(project).also(RootDirectory::write)
         onGenerate(prompter, project, root)
     }

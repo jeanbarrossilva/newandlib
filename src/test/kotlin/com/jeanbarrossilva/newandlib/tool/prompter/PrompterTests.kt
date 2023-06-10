@@ -1,12 +1,12 @@
 package com.jeanbarrossilva.newandlib.tool.prompter
 
 import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.assertThrows
 
 internal class PrompterTests {
     private val prompter = TestPrompter()
@@ -50,6 +50,13 @@ internal class PrompterTests {
     fun `GIVEN an input constrained to options WHEN inputting one of them THEN it is saved`() {
         prompter.input("red")
         runTest {  }
+    }
+
+    @Test
+    fun `GIVEN unprovided input to a prompt WHEN requiring it THEN it throws`() {
+        assertThrows<IllegalStateException> {
+            prompter.require(prompt)
+        }
     }
 
     private fun prompt(default: String? = null): String {

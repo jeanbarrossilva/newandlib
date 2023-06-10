@@ -26,6 +26,15 @@ abstract class Prompter internal constructor() {
     }
 
     /**
+     * Gets the response given by the user to the [prompt].
+     *
+     * @throws IllegalStateException If no input for the [prompt] has been provided.
+     **/
+    fun require(prompt: Prompt): String {
+        return get(prompt) ?: throw IllegalStateException("No input provided for prompt ${prompt::class.simpleName}.")
+    }
+
+    /**
      * Prompts the user the given [prompt].
      *
      * @param prompt [Prompt] to be shown to the user.
