@@ -1,9 +1,10 @@
 package com.jeanbarrossilva.newandlib.tool.file
 
+import com.jeanbarrossilva.newandlib.tool.extensions.at
+import com.jeanbarrossilva.newandlib.tool.extensions.fileAt
 import com.jeanbarrossilva.newandlib.tool.extensions.`if`
-import java.nio.file.Files
+import com.jeanbarrossilva.newandlib.tool.extensions.plus
 import java.nio.file.Path
-import kotlin.io.path.writer
 
 abstract class TextFile : File {
     abstract val directory: Directory
@@ -11,10 +12,11 @@ abstract class TextFile : File {
     abstract val text: String
 
     final override val path: Path
-        get() = Path.of("${directory.path}" + java.io.File.pathSeparator + name)
+        get() = directory.path + at(name)
 
-    final override fun create(origin: String) {
-        Files.createFile(path)?.writer()?.use {
+    final override fun write() {
+        super.write()
+        fileAt(path).writer().use {
             val indentTrimmedText = text.trimIndent().`if`(String::isNotEmpty) { plus("\n") }
             it.write(indentTrimmedText)
         }

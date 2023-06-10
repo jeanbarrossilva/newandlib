@@ -1,12 +1,21 @@
 package com.jeanbarrossilva.newandlib.tool.file
 
+import com.jeanbarrossilva.newandlib.tool.extensions.plus
 import java.nio.file.Files
 import java.nio.file.Path
-import java.nio.file.Paths
 
 interface Directory : File {
-    override fun create(origin: String) {
-        val path: Path = Paths.get("$origin/$path")
-        Files.createDirectories(path.parent)
+    val children: List<File>
+
+    override fun write() {
+        super.write()
+        children.forEach(File::write)
+    }
+
+    infix operator fun plus(other: Path): Directory {
+        return object : Directory {
+            override val path = this@Directory.path + other
+            override val children = emptyList<File>()
+        }
     }
 }

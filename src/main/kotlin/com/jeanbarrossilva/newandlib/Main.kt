@@ -1,12 +1,14 @@
 package com.jeanbarrossilva.newandlib
 
-import com.jeanbarrossilva.newandlib.type.library.prompt.GroupIDPrompt
-import com.jeanbarrossilva.newandlib.type.library.prompt.ProjectNamePrompt
-import com.jeanbarrossilva.newandlib.type.library.prompt.ProjectPathPrompt
-import com.jeanbarrossilva.newandlib.type.library.prompt.ProjectTypeNamespacePrompt
-import com.jeanbarrossilva.newandlib.type.library.prompt.RepositoryUrlPrompt
+import com.jeanbarrossilva.newandlib.project.type.library.prompt.GroupIDPrompt
+import com.jeanbarrossilva.newandlib.project.type.library.prompt.ProjectNamePrompt
+import com.jeanbarrossilva.newandlib.project.type.library.prompt.ProjectPathPrompt
+import com.jeanbarrossilva.newandlib.project.type.library.prompt.ProjectTypeNamespacePrompt
+import com.jeanbarrossilva.newandlib.project.type.library.prompt.RepositoryUrlPrompt
+import com.jeanbarrossilva.newandlib.tool.prompter.Prompter
 import com.jeanbarrossilva.newandlib.tool.prompter.prompt
 import com.jeanbarrossilva.newandlib.utils.currentPath
+import java.io.IOException
 
 fun main() {
     prompt {
@@ -19,8 +21,14 @@ fun main() {
         prompt(ProjectPathPrompt, default = currentPath)
         prompt(RepositoryUrlPrompt, default = "")
         Generator.generate()
-        Runtime.getRuntime().exec("chmod +x gradlew")
-        Runtime.getRuntime().exec("studio ${get(ProjectPathPrompt)}")
+        ProcessBuilder().run { command("chmod", "+x", "gradlew") }.also(::tryToOpenAndroidStudio)
         println("Done!")
+    }
+}
+
+private fun Prompter.tryToOpenAndroidStudio(processBuilder: ProcessBuilder) {
+    try {
+        processBuilder.command("studio", "${get(ProjectPathPrompt)}")
+    } catch (_: IOException) {
     }
 }
