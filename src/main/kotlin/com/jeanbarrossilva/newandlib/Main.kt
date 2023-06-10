@@ -1,6 +1,6 @@
 package com.jeanbarrossilva.newandlib
 
-import com.jeanbarrossilva.newandlib.project.type.LibraryProjectGenerator
+import com.jeanbarrossilva.newandlib.project.type.library.LibraryProjectGenerator
 import com.jeanbarrossilva.newandlib.project.type.library.prompt.GroupIDPrompt
 import com.jeanbarrossilva.newandlib.project.type.library.prompt.ProjectNamePrompt
 import com.jeanbarrossilva.newandlib.project.type.library.prompt.ProjectPathPrompt

@@ -1,4 +1,4 @@
-package com.jeanbarrossilva.newandlib.project.type
+package com.jeanbarrossilva.newandlib.project.type.library
 
 import com.jeanbarrossilva.newandlib.project.Project
 import com.jeanbarrossilva.newandlib.project.ProjectGenerator
