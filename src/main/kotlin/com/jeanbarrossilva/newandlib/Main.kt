@@ -1,6 +1,6 @@
 package com.jeanbarrossilva.newandlib
 
-import com.jeanbarrossilva.newandlib.project.prompt.ProjectPathPrompt
+import com.jeanbarrossilva.newandlib.project.defaults.prompt.ProjectPathPrompt
 import com.jeanbarrossilva.newandlib.project.type.library.LibraryProjectGenerator
 import com.jeanbarrossilva.newandlib.tool.prompter.Prompter
 import com.jeanbarrossilva.newandlib.tool.prompter.prompt
