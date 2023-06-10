@@ -1,4 +1,4 @@
-package com.jeanbarrossilva.newandlib.project
+package com.jeanbarrossilva.newandlib.project.info
 
 import com.google.common.base.CaseFormat
 

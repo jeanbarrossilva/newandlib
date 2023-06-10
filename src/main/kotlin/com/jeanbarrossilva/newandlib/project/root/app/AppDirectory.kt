@@ -1,6 +1,6 @@
 package com.jeanbarrossilva.newandlib.project.root.app
 
-import com.jeanbarrossilva.newandlib.project.Naming
+import com.jeanbarrossilva.newandlib.project.info.Naming
 import com.jeanbarrossilva.newandlib.project.root.app.children.AndroidManifestFile
 import com.jeanbarrossilva.newandlib.project.root.app.children.BuildGradleFile
 import com.jeanbarrossilva.newandlib.project.root.app.children.GitIgnoreFile

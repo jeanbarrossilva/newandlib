@@ -1,6 +1,6 @@
 package com.jeanbarrossilva.newandlib.project.root.app.children
 
-import com.jeanbarrossilva.newandlib.project.Naming
+import com.jeanbarrossilva.newandlib.project.info.Naming
 import com.jeanbarrossilva.newandlib.tool.file.Directory
 import com.jeanbarrossilva.newandlib.tool.file.TextFile
 

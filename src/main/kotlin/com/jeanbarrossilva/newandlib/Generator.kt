@@ -1,7 +1,7 @@
 package com.jeanbarrossilva.newandlib
 
-import com.jeanbarrossilva.newandlib.project.Naming
-import com.jeanbarrossilva.newandlib.project.Package
+import com.jeanbarrossilva.newandlib.project.info.Naming
+import com.jeanbarrossilva.newandlib.project.info.Package
 import com.jeanbarrossilva.newandlib.project.Project
 import com.jeanbarrossilva.newandlib.project.RootDirectory
 import com.jeanbarrossilva.newandlib.project.type.library.prompt.GroupIDPrompt
