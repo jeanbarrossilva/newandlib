@@ -11,7 +11,7 @@ import com.jeanbarrossilva.newandlib.tool.file.Directory
 import com.jeanbarrossilva.newandlib.utils.javaMainSource
 import java.nio.file.Path
 
-internal class BuildSrcDirectory(root: Path, project: Project) : Directory {
+internal class BuildSrcDirectory(root: Path, project: Project) : Directory() {
     override val path: Path = root.resolve("buildSrc")
     override val children = listOf(
         BuildGradleFile(path),

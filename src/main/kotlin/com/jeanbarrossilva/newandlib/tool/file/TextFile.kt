@@ -6,7 +6,7 @@ import com.jeanbarrossilva.newandlib.tool.extensions.`if`
 import com.jeanbarrossilva.newandlib.tool.extensions.plus
 import java.nio.file.Path
 
-abstract class TextFile : File {
+abstract class TextFile : File() {
     protected abstract val parentPath: Path
     protected abstract val name: String
     protected abstract val text: String

@@ -1,21 +1,14 @@
 package com.jeanbarrossilva.newandlib.tool.file
 
-import com.jeanbarrossilva.newandlib.tool.extensions.plus
-import java.nio.file.Files
-import java.nio.file.Path
+abstract class Directory : File() {
+    protected abstract val children: List<File>
 
-interface Directory : File {
-    val children: List<File>
-
-    override fun write() {
+    final override fun write() {
         super.write()
+        onWrite()
         children.forEach(File::write)
     }
 
-    infix operator fun plus(other: Path): Directory {
-        return object : Directory {
-            override val path = this@Directory.path + other
-            override val children = emptyList<File>()
-        }
+    protected open fun onWrite() {
     }
 }

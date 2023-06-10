@@ -16,9 +16,8 @@ internal abstract class ProjectGenerator {
         val naming = Naming from projectName
         val groupID = prompter.require(GroupIDPrompt)
         val project = Project(path, naming, groupID, Package named groupID)
-        val root = RootDirectory(project).also(RootDirectory::write)
-        onGenerate(prompter, project, root)
+        onGenerate(prompter, project)
     }
 
-    protected abstract fun onGenerate(prompter: Prompter, project: Project, root: RootDirectory)
+    protected abstract fun onGenerate(prompter: Prompter, project: Project)
 }

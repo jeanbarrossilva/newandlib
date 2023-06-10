@@ -12,12 +12,12 @@ import com.jeanbarrossilva.newandlib.utils.mainSource
 import java.nio.file.Path
 import kotlin.io.path.createDirectories
 
-internal class ModuleDirectory(root: Path, private val project: Project) : Directory {
+internal class ModuleDirectory(root: Path, private val project: Project) : Directory() {
     override val path = root + at(project.naming.hyphenated)
     override val children =
         listOf(AndroidManifestFile(path.mainSource), BuildGradleFile(path, project.naming), GitIgnoreFile(path))
 
-    override fun write() {
+    override fun onWrite() {
         super.write()
         path.javaMainSource.resolve(project.`package`.path).createDirectories()
     }

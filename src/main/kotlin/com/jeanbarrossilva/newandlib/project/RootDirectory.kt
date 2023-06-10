@@ -13,7 +13,7 @@ import com.jeanbarrossilva.newandlib.project.root.gradle.GradleWrapperDirectory
 import com.jeanbarrossilva.newandlib.project.root.workflows.WorkflowsDirectory
 import com.jeanbarrossilva.newandlib.tool.file.Directory
 
-internal class RootDirectory(project: Project) : Directory {
+internal class RootDirectory(project: Project) : Directory() {
     override val path = project.path
     override val children = listOf(
         AppDirectory(path, project.naming),
