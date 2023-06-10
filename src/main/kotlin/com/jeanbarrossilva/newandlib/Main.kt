@@ -1,5 +1,6 @@
 package com.jeanbarrossilva.newandlib
 
+import com.jeanbarrossilva.newandlib.project.type.LibraryProjectGenerator
 import com.jeanbarrossilva.newandlib.project.type.library.prompt.GroupIDPrompt
 import com.jeanbarrossilva.newandlib.project.type.library.prompt.ProjectNamePrompt
 import com.jeanbarrossilva.newandlib.project.type.library.prompt.ProjectPathPrompt
@@ -20,7 +21,7 @@ fun main() {
         prompt(ProjectTypeNamespacePrompt, default = get(GroupIDPrompt))
         prompt(ProjectPathPrompt, default = currentPath)
         prompt(RepositoryUrlPrompt, default = "")
-        Generator.generate()
+        LibraryProjectGenerator().generate(this)
         ProcessBuilder().run { command("chmod", "+x", "gradlew") }.also(::tryToOpenAndroidStudio)
         println("Done!")
     }
