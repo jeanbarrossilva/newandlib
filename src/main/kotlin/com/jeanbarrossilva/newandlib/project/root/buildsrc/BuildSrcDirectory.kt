@@ -14,11 +14,11 @@ import java.nio.file.Path
 internal class BuildSrcDirectory(root: Path, project: Project) : Directory {
     override val path: Path = root.resolve("buildSrc")
     override val children = listOf(
-        BuildGradleFile(this),
-        GitIgnoreFile(this),
-        MetadataFile(this + path.javaMainSource, project),
-        PluginsFile(this + path.javaMainSource),
-        VariantsFile(this + path.javaMainSource),
-        VersionsFile(this + path.javaMainSource, project.naming)
+        BuildGradleFile(path),
+        GitIgnoreFile(path),
+        MetadataFile(path.javaMainSource, project),
+        PluginsFile(path.javaMainSource),
+        VariantsFile(path.javaMainSource),
+        VersionsFile(path.javaMainSource, project.naming)
     )
 }

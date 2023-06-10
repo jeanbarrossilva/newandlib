@@ -1,14 +1,11 @@
 package com.jeanbarrossilva.newandlib.project.type.library.structure.buildsrc
 
 import com.jeanbarrossilva.newandlib.project.info.Naming
-import com.jeanbarrossilva.newandlib.tool.file.Directory
 import com.jeanbarrossilva.newandlib.tool.file.TextFile
+import java.nio.file.Path
 
-internal class RepositoryHandlerExtensionsFile(
-    override val directory: Directory,
-    naming: Naming,
-    repositoryUrl: String
-) : TextFile() {
+internal class RepositoryHandlerExtensionsFile(override val parentPath: Path, naming: Naming, repositoryUrl: String) :
+    TextFile() {
     override val name = "RepositoryHandler.extensions.kt"
     override val text = """
         import java.net.URI

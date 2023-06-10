@@ -7,12 +7,12 @@ import com.jeanbarrossilva.newandlib.tool.extensions.plus
 import java.nio.file.Path
 
 abstract class TextFile : File {
-    abstract val directory: Directory
-    abstract val name: String
-    abstract val text: String
+    protected abstract val parentPath: Path
+    protected abstract val name: String
+    protected abstract val text: String
 
     final override val path: Path
-        get() = directory.path + at(name)
+        get() = parentPath + at(name)
 
     final override fun write() {
         super.write()

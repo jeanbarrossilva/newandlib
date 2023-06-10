@@ -9,5 +9,5 @@ import java.nio.file.Path
 
 internal class GradleWrapperDirectory(root: Path) : Directory {
     override val path = root + at("gradle") + at("wrapper")
-    override val children = listOf(GradleWrapperFile(path), GradleWrapperPropertiesFile(this))
+    override val children = listOf(GradleWrapperFile(path), GradleWrapperPropertiesFile(path))
 }

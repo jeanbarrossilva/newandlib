@@ -9,5 +9,5 @@ import java.nio.file.Path
 
 internal class WorkflowsDirectory(root: Path) : Directory {
     override val path: Path = root + at(".github/workflows")
-    override val children = listOf<TextFile>(GradleWorkflowFile(this))
+    override val children = listOf<TextFile>(GradleWorkflowFile(path))
 }

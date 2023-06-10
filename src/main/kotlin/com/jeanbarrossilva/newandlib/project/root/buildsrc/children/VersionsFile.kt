@@ -1,10 +1,10 @@
 package com.jeanbarrossilva.newandlib.project.root.buildsrc.children
 
 import com.jeanbarrossilva.newandlib.project.info.Naming
-import com.jeanbarrossilva.newandlib.tool.file.Directory
 import com.jeanbarrossilva.newandlib.tool.file.TextFile
+import java.nio.file.Path
 
-internal class VersionsFile(override val directory: Directory, naming: Naming) : TextFile() {
+internal class VersionsFile(override val parentPath: Path, naming: Naming) : TextFile() {
     override val name = "Versions.kt"
     override val text = """
         import org.gradle.api.JavaVersion

@@ -1,10 +1,10 @@
 package com.jeanbarrossilva.newandlib.project.root.buildsrc.children
 
 import com.jeanbarrossilva.newandlib.project.Project
-import com.jeanbarrossilva.newandlib.tool.file.Directory
 import com.jeanbarrossilva.newandlib.tool.file.TextFile
+import java.nio.file.Path
 
-internal class MetadataFile(override val directory: Directory, project: Project) :
+internal class MetadataFile(override val parentPath: Path, project: Project) :
     TextFile() {
     override val name = "Metadata.kt"
     override val text = """

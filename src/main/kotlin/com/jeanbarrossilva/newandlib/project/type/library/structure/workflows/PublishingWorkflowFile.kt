@@ -1,9 +1,9 @@
 package com.jeanbarrossilva.newandlib.project.type.library.structure.workflows
 
-import com.jeanbarrossilva.newandlib.tool.file.Directory
 import com.jeanbarrossilva.newandlib.tool.file.TextFile
+import java.nio.file.Path
 
-internal class PublishingWorkflowFile(override val directory: Directory) : TextFile() {
+internal class PublishingWorkflowFile(override val parentPath: Path) : TextFile() {
     override val name = "publishing.yml"
 
     @Suppress("SpellCheckingInspection")

@@ -1,10 +1,10 @@
 package com.jeanbarrossilva.newandlib.project.root
 
 import com.jeanbarrossilva.newandlib.project.info.Naming
-import com.jeanbarrossilva.newandlib.tool.file.Directory
 import com.jeanbarrossilva.newandlib.tool.file.TextFile
+import java.nio.file.Path
 
-internal class SettingsFile(override val directory: Directory, naming: Naming) : TextFile() {
+internal class SettingsFile(override val parentPath: Path, naming: Naming) : TextFile() {
     override val name = "settings.gradle"
     override val text = """
         rootProject.name = "${naming.default}"

@@ -1,11 +1,11 @@
 package com.jeanbarrossilva.newandlib.project.root.gradle.children
 
-import com.jeanbarrossilva.newandlib.tool.file.Directory
 import com.jeanbarrossilva.newandlib.tool.file.TextFile
 import com.jeanbarrossilva.newandlib.utils.GradleWrapperPropertiesHeaderDateTimeFormatter
+import java.nio.file.Path
 import java.time.ZonedDateTime
 
-internal class GradleWrapperPropertiesFile(override val directory: Directory) : TextFile() {
+internal class GradleWrapperPropertiesFile(override val parentPath: Path) : TextFile() {
     override val name = "gradle-wrapper.properties"
 
     @Suppress("SpellCheckingInspection")

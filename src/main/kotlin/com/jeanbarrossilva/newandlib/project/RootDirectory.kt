@@ -17,15 +17,15 @@ internal class RootDirectory(project: Project) : Directory {
     override val path = project.path
     override val children = listOf(
         AppDirectory(path, project.naming),
-        BuildGradleFile(this),
+        BuildGradleFile(path),
         BuildSrcDirectory(path, project),
-        GitIgnoreFile(this),
-        GradlePropertiesFile(this),
+        GitIgnoreFile(path),
+        GradlePropertiesFile(path),
         GradleWrapperDirectory(path),
-        GradleWBatFile(this),
-        GradleWFile(this),
-        LocalPropertiesFile(this),
-        SettingsFile(this, project.naming),
+        GradleWBatFile(path),
+        GradleWFile(path),
+        LocalPropertiesFile(path),
+        SettingsFile(path, project.naming),
         WorkflowsDirectory(path)
     )
 }

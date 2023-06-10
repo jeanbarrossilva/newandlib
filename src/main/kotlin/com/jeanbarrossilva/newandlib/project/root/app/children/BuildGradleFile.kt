@@ -1,10 +1,10 @@
 package com.jeanbarrossilva.newandlib.project.root.app.children
 
 import com.jeanbarrossilva.newandlib.project.info.Naming
-import com.jeanbarrossilva.newandlib.tool.file.Directory
 import com.jeanbarrossilva.newandlib.tool.file.TextFile
+import java.nio.file.Path
 
-internal class BuildGradleFile(override val directory: Directory, naming: Naming) : TextFile() {
+internal class BuildGradleFile(override val parentPath: Path, naming: Naming) : TextFile() {
     override val name = "build.gradle.kts"
     override val text = """
         plugins {

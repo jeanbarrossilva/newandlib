@@ -13,5 +13,5 @@ import java.nio.file.Path
 internal class AppDirectory(root: Path, naming: Naming) : Directory {
     override val path = root + at("app")
     override val children =
-        listOf(AndroidManifestFile(this + path.mainSource), BuildGradleFile(this, naming), GitIgnoreFile(this))
+        listOf(AndroidManifestFile(path.mainSource), BuildGradleFile(path, naming), GitIgnoreFile(path))
 }
