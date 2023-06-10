@@ -12,8 +12,7 @@ import com.jeanbarrossilva.newandlib.tool.prompter.Prompter
 
 internal class LibraryProjectGenerator : ProjectGenerator() {
     override fun onGenerate(prompter: Prompter, project: Project, root: RootDirectory) {
-        val repositoryUrl =
-            prompter[RepositoryUrlPrompt] ?: throw IllegalStateException("Repository URL cannot be null.")
+        val repositoryUrl = prompter.require(RepositoryUrlPrompt)
         ModuleDirectory(root.path, project).write()
         PublishingWorkflowFile(root + at(".github") + at("workflows")).write()
         RepositoryHandlerExtensionsFile(
