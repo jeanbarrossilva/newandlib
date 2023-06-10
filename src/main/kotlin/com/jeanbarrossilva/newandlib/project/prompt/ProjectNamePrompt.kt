@@ -1,7 +1,7 @@
-package com.jeanbarrossilva.newandlib.project.type.library.prompt
+package com.jeanbarrossilva.newandlib.project.prompt
 
 import com.jeanbarrossilva.newandlib.tool.prompter.Prompt
 
-internal object ProjectNamePrompt : Prompt {
+internal class ProjectNamePrompt : Prompt {
     override val content = "What's the name of the project?"
 }

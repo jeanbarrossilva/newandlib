@@ -1,27 +1,20 @@
 package com.jeanbarrossilva.newandlib
 
+import com.jeanbarrossilva.newandlib.project.prompt.ProjectPathPrompt
 import com.jeanbarrossilva.newandlib.project.type.library.LibraryProjectGenerator
-import com.jeanbarrossilva.newandlib.project.type.library.prompt.GroupIDPrompt
-import com.jeanbarrossilva.newandlib.project.type.library.prompt.ProjectNamePrompt
-import com.jeanbarrossilva.newandlib.project.type.library.prompt.ProjectPathPrompt
-import com.jeanbarrossilva.newandlib.project.type.library.prompt.ProjectTypeNamespacePrompt
-import com.jeanbarrossilva.newandlib.project.type.library.prompt.RepositoryUrlPrompt
 import com.jeanbarrossilva.newandlib.tool.prompter.Prompter
 import com.jeanbarrossilva.newandlib.tool.prompter.prompt
-import com.jeanbarrossilva.newandlib.utils.currentPath
 import java.io.IOException
 
 fun main() {
     prompt {
+        val generator = LibraryProjectGenerator(this)
+
         @Suppress("SpellCheckingInspection")
         println("Welcome to newandlib!\n")
 
-        prompt(ProjectNamePrompt)
-        prompt(GroupIDPrompt)
-        prompt(ProjectTypeNamespacePrompt, default = get<GroupIDPrompt>())
-        prompt(ProjectPathPrompt, default = currentPath)
-        prompt(RepositoryUrlPrompt, default = "")
-        LibraryProjectGenerator().generate(this)
+        generator.prompts.forEach(::prompt)
+        generator.generate()
         ProcessBuilder().run { command("chmod", "+x", "gradlew") }.also(::tryToOpenAndroidStudio)
         println("Done!")
     }

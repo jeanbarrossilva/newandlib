@@ -1,6 +1,5 @@
 package com.jeanbarrossilva.newandlib.tool.file.writer
 
-import com.jeanbarrossilva.newandlib.utils.currentPath
 import java.nio.file.Paths
 import kotlin.io.path.ExperimentalPathApi
 import kotlin.io.path.createDirectory
@@ -12,7 +11,7 @@ import kotlin.test.assertEquals
 
 internal class FileWriterTests {
     private val fileName = "file-writer-tests.txt"
-    private val fileParentPath = "$currentPath/outputs"
+    private val fileParentPath = "outputs"
     private val filePath = "$fileParentPath/$fileName"
     private val writer = FileWriter(fileParentPath)
 
