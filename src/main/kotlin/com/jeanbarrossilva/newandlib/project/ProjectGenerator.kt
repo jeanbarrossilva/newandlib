@@ -10,9 +10,13 @@ import com.jeanbarrossilva.newandlib.project.info.Package
 import com.jeanbarrossilva.newandlib.tool.extensions.at
 import com.jeanbarrossilva.newandlib.tool.prompter.Prompter
 
-internal abstract class ProjectGenerator(protected val prompter: Prompter) {
-    open val prompts =
-        listOf(ProjectNamePrompt(), GroupIDPrompt(), ProjectTypeNamespacePrompt(prompter), ProjectPathPrompt())
+internal abstract class ProjectGenerator(protected val prompter: Prompter, typeName: String) {
+    open val prompts = listOf(
+        ProjectNamePrompt(),
+        GroupIDPrompt(),
+        ProjectTypeNamespacePrompt(prompter, typeName),
+        ProjectPathPrompt()
+    )
 
     fun generate() {
         val pathValue = prompter.require<ProjectPathPrompt>()

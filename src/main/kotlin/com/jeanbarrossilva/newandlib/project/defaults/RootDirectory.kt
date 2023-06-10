@@ -17,7 +17,7 @@ import com.jeanbarrossilva.newandlib.tool.file.Directory
 internal class RootDirectory(project: Project) : Directory() {
     override val path = project.path
     override val children = listOf(
-        AppDirectory(path, project.naming),
+        AppDirectory(path),
         BuildGradleFile(path),
         BuildSrcDirectory(path, project),
         GitIgnoreFile(path),

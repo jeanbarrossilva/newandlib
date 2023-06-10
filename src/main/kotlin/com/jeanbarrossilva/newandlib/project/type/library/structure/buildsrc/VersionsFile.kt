@@ -1,4 +1,4 @@
-package com.jeanbarrossilva.newandlib.project.defaults.root.buildsrc.children
+package com.jeanbarrossilva.newandlib.project.type.library.structure.buildsrc
 
 import com.jeanbarrossilva.newandlib.project.info.Naming
 import com.jeanbarrossilva.newandlib.tool.file.TextFile

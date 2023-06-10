@@ -1,4 +1,4 @@
-package com.jeanbarrossilva.newandlib.project.defaults.root.app.children
+package com.jeanbarrossilva.newandlib.project.type.app.structure.theme.children
 
 import com.jeanbarrossilva.newandlib.project.info.Naming
 import com.jeanbarrossilva.newandlib.tool.file.TextFile
@@ -8,42 +8,56 @@ internal class BuildGradleFile(override val parentPath: Path, naming: Naming) : 
     override val name = "build.gradle.kts"
     override val text = """
         plugins {
-            id("com.android.application")
-            id("kotlin-android")
+            id("com.android.library")
+            id("org.jetbrains.kotlin.android")
         }
-
-        @Suppress("UnstableApiUsage")
+        
         android {
-            namespace = Metadata.namespace("app")
-            compileSdk = Versions.${naming.default}.SDK_COMPILE
-
+            namespace = Metadata.namespace("platform.theme")
+            compileSdk = Versions.${naming.default}.TARGET_SDK
+        
             defaultConfig {
-                applicationId = Metadata.GROUP
-                minSdk = Versions.${naming.default}.SDK_MIN
-                targetSdk = Versions.${naming.default}.SDK_TARGET
-                versionCode = Versions.${naming.default}.CODE
-                versionName = Versions.${naming.default}.NAME
+                minSdk = Versions.${naming.default}.MIN_SDK
                 testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+                consumerProguardFiles("consumer-rules.pro")
             }
-
+        
             buildTypes {
-                getByName(Variants.RELEASE) {
+                release {
                     isMinifyEnabled = true
+        
+                    @Suppress("UnstableApiUsage")
                     proguardFiles(
                         getDefaultProguardFile("proguard-android-optimize.txt"),
                         "proguard-rules.pro"
                     )
                 }
             }
-
+        
+            @Suppress("UnstableApiUsage")
+            buildFeatures {
+                compose = true
+            }
+        
             compileOptions {
                 sourceCompatibility = Versions.java
                 targetCompatibility = Versions.java
             }
-
+        
             kotlinOptions {
                 jvmTarget = Versions.java.toString()
             }
+        
+            composeOptions {
+                kotlinCompilerExtensionVersion = Versions.COMPOSE_COMPILER
+            }
+        }
+        
+        dependencies {
+            api(Dependencies.COMPOSE_MATERIAL_3)
+            api(Dependencies.COMPOSE_UI_TOOLING)
+        
+            implementation(Dependencies.MATERIAL)
         }
     """
 }

@@ -9,4 +9,12 @@ abstract class File {
     open fun write() {
         Files.createDirectories(path.parent)
     }
+
+    companion object {
+        fun located(path: Path): File {
+            return object : File() {
+                override val path = path
+            }
+        }
+    }
 }
