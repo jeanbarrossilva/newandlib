@@ -19,6 +19,7 @@ internal abstract class ProjectGenerator(protected val prompter: Prompter, typeN
     )
 
     fun generate() {
+        prompts.forEach(prompter::prompt)
         val pathValue = prompter.require<ProjectPathPrompt>()
         val path = at(pathValue)
         val projectName = prompter.require<ProjectNamePrompt>()

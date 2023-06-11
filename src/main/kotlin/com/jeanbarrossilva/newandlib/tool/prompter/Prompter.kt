@@ -10,11 +10,13 @@ abstract class Prompter internal constructor() {
      * Prompts the user the given [prompt].
      *
      * @param prompt [Prompt] to be shown to the user.
+     * @return The user's input.
      **/
     fun prompt(prompt: Prompt): String {
-        val response = onPrompt(prompt) ?: prompt.default ?: prompt(prompt)
-        prompts[prompt::class] = response
-        return response
+        val getInputOrDefault = { onPrompt(prompt) ?: prompt.default ?: prompt(prompt) }
+        val input = prompt.receive(getInputOrDefault(), onFailure = getInputOrDefault)
+        prompts[prompt::class] = input
+        return input
     }
 
     /** Gets the response given by the user to the [Prompt] of type [T]. **/
@@ -56,7 +58,6 @@ abstract class Prompter internal constructor() {
      * Prompts the user the given [prompt].
      *
      * @param prompt [Prompt] to be shown to the user.
-     * @param default Response that's attached to this prompt by default.
      **/
     protected abstract fun onPrompt(prompt: Prompt): String?
 }
