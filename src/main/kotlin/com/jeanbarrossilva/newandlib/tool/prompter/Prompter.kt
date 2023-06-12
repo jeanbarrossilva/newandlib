@@ -13,7 +13,7 @@ abstract class Prompter internal constructor() {
      * @return The user's input.
      **/
     fun prompt(prompt: Prompt): String {
-        val input = onPrompt(prompt) ?: prompt.default ?: prompt(prompt)
+        val input = onPrompt(prompt.formattedContent) ?: prompt.default ?: prompt(prompt)
         val isInvalid = !prompt.isValid(input)
         if (isInvalid) {
             prompt(prompt)
@@ -58,9 +58,9 @@ abstract class Prompter internal constructor() {
     }
 
     /**
-     * Prompts the user the given [prompt].
+     * Prompts the user the given [content].
      *
-     * @param prompt [Prompt] to be shown to the user.
+     * @param content Content to be shown to the user.
      **/
-    protected abstract fun onPrompt(prompt: Prompt): String?
+    protected abstract fun onPrompt(content: String): String?
 }

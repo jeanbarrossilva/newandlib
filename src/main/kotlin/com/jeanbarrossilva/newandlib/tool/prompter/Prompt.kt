@@ -1,15 +1,24 @@
 package com.jeanbarrossilva.newandlib.tool.prompter
 
+import com.jeanbarrossilva.newandlib.tool.extensions.`if`
+
 /** Message to be displayed to the user that can be responded by them. **/
 abstract class Prompt {
+    /** Message to be shown, indicating what input the user should respond with. **/
+    protected abstract val content: String
+
+    /** Formatted version of the [content] that displays the available [options] (if any) and the [default] value. **/
+    internal val formattedContent
+        get() = "> $content"
+            .`if`(options.isNotEmpty()) { plus(" $options") }
+            .`if`(default != null) { plus(" ($default)") }
+            .plus(" ")
+
     /** The input that's taken into consideration by default whenever the user ignores this [Prompt]. **/
     open val default: String? = null
 
     /** Inputs that the user is constrained to respond with. If empty, then anything they hand in is acceptable. **/
     open val options = emptyList<String>()
-
-    /** Message to be shown, indicating what input the user should respond with. **/
-    abstract val content: String
 
     /**
      * Whether the [input] is valid.
