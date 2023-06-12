@@ -12,7 +12,7 @@ import com.jeanbarrossilva.newandlib.tool.prompter.Prompter
 internal abstract class ProjectGenerator(protected val prompter: Prompter, typeName: String) {
     protected open val prompts = listOf(ProjectNamePrompt(), PackageNamePrompt(typeName), ProjectPathPrompt())
 
-    fun generate() {
+    fun generate(): Project {
         prompts.forEach(prompter::prompt)
         val pathValue = prompter.require<ProjectPathPrompt>()
         val path = at(pathValue)
@@ -22,6 +22,7 @@ internal abstract class ProjectGenerator(protected val prompter: Prompter, typeN
         val project = Project(path, naming, groupID, Package named groupID)
         RootDirectory(project).write()
         onGenerate(project)
+        return project
     }
 
     protected abstract fun onGenerate(project: Project)

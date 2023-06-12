@@ -3,6 +3,7 @@ package com.jeanbarrossilva.newandlib.project.type.app.structure.app
 import com.jeanbarrossilva.newandlib.project.info.Naming
 import com.jeanbarrossilva.newandlib.project.info.Package
 import com.jeanbarrossilva.newandlib.project.type.app.entrypoint
+import com.jeanbarrossilva.newandlib.project.type.app.theme
 import com.jeanbarrossilva.newandlib.tool.file.TextFile
 import java.nio.file.Path
 
@@ -41,7 +42,7 @@ internal class EntrypointFile(override val parentPath: Path, naming: Naming, `pa
         import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
         import com.google.accompanist.navigation.material.ModalBottomSheetLayout
         import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
-        import ${`package`.name}.platform.theme.SammTheme
+        import ${`package`.name}.platform.theme.${naming.theme}
         import com.ramcosta.composedestinations.animations.defaults.RootNavGraphDefaultAnimations
         import com.ramcosta.composedestinations.animations.rememberAnimatedNavHostEngine
         import com.ramcosta.composedestinations.utils.currentDestinationAsState
@@ -89,7 +90,7 @@ internal class EntrypointFile(override val parentPath: Path, naming: Naming, `pa
                 }
             )
 
-            SammTheme {
+            ${naming.theme} {
                 ModalBottomSheetLayout(
                     bottomSheetNavigator,
                     sheetShape = BottomSheetDefaults.ExpandedShape

@@ -10,6 +10,7 @@ import com.jeanbarrossilva.newandlib.project.defaults.root.LocalPropertiesFile
 import com.jeanbarrossilva.newandlib.project.defaults.root.app.AppDirectory
 import com.jeanbarrossilva.newandlib.project.defaults.root.buildsrc.BuildSrcDirectory
 import com.jeanbarrossilva.newandlib.project.defaults.root.gradle.GradleWrapperDirectory
+import com.jeanbarrossilva.newandlib.project.defaults.root.idea.IdeaDirectory
 import com.jeanbarrossilva.newandlib.project.defaults.root.workflows.WorkflowsDirectory
 import com.jeanbarrossilva.newandlib.tool.file.Directory
 
@@ -24,6 +25,7 @@ internal class RootDirectory(project: Project) : Directory() {
         GradleWrapperDirectory(path),
         GradleWBatFile(path),
         GradleWFile(path),
+        IdeaDirectory(path),
         LocalPropertiesFile(path),
         WorkflowsDirectory(path)
     )
