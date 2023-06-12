@@ -5,11 +5,11 @@ import com.jeanbarrossilva.newandlib.tool.extensions.`if`
 /** Message to be displayed to the user that can be responded by them. **/
 abstract class Prompt {
     /** Message to be shown, indicating what input the user should respond with. **/
-    protected abstract val content: String
+    protected abstract val message: String
 
-    /** Formatted version of the [content] that displays the available [options] (if any) and the [default] value. **/
-    internal val formattedContent
-        get() = "> $content"
+    /** Formatted version of the [message] that displays the available [options] (if any) and the [default] value. **/
+    internal val formattedMessage
+        get() = "> $message"
             .`if`(options.isNotEmpty()) { plus(" $options") }
             .`if`(default != null) { plus(" ($default)") }
             .plus(" ")

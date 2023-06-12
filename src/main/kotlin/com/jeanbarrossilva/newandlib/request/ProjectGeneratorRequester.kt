@@ -9,7 +9,7 @@ internal object ProjectGeneratorRequester {
         val libraryHandler = LibraryProjectGeneratorRequestHandler(prompter, next = null)
         val appHandler = AppProjectGeneratorRequestHandler(prompter, libraryHandler)
         val prompt = object : Prompt() {
-            override val content = "What type of project do you want to generate?"
+            override val message = "What type of project do you want to generate?"
             override val options =
                 listOf(AppProjectGeneratorRequestHandler.REQUEST, LibraryProjectGeneratorRequestHandler.REQUEST)
         }

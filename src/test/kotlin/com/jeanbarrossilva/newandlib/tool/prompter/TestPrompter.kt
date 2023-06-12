@@ -3,7 +3,7 @@ package com.jeanbarrossilva.newandlib.tool.prompter
 internal class TestPrompter : Prompter() {
     private var input: String? = null
 
-    override fun onPrompt(content: String): String? {
+    override fun onPrompt(message: String): String? {
         return input
     }
 
