@@ -15,7 +15,7 @@ import com.jeanbarrossilva.newandlib.tool.file.Directory
 import java.nio.file.Path
 
 internal class ThemeModuleDirectory(root: Path, project: Project) : Directory() {
-    override val path = root + at("platform") + at("theme")
+    override val path = root + at("theme")
     override val children = listOf(
         AndroidManifestFile(path),
         BuildGradleFile(path, project.naming),

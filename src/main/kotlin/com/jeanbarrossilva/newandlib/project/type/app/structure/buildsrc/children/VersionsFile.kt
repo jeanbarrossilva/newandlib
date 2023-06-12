@@ -12,6 +12,7 @@ internal class VersionsFile(override val parentPath: Path, naming: Naming) : Tex
         import org.gradle.api.JavaVersion
 
         object Versions {
+            const val ACCOMPANIST = "0.31.3-beta"
             const val COMPOSE_COMPILER = "1.4.7"
             const val COMPOSE_DESTINATIONS = "1.9.42-beta"
             const val COMPOSE_MATERIAL_3 = "1.2.0-alpha02"

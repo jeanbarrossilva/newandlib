@@ -1,7 +1,7 @@
 package com.jeanbarrossilva.newandlib.project.type.app.structure.platform.theme.children.main.provider
 
 import com.jeanbarrossilva.newandlib.project.Project
-import com.jeanbarrossilva.newandlib.project.type.app.structure.platform.theme.theme
+import com.jeanbarrossilva.newandlib.project.type.app.theme
 import com.jeanbarrossilva.newandlib.tool.file.TextFile
 import com.jeanbarrossilva.newandlib.utils.javaMainSource
 import java.nio.file.Path

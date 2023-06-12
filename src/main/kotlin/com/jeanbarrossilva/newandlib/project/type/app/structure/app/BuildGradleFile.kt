@@ -6,9 +6,12 @@ import java.nio.file.Path
 
 internal class BuildGradleFile(override val parentPath: Path, naming: Naming) : TextFile() {
     override val name = "build.gradle.kts"
+
+    @Suppress("SpellCheckingInspection")
     override val text = """
         plugins {
             id("com.android.application")
+            id("com.google.devtools.ksp") version Versions.KSP
             id("kotlin-android")
         }
 
@@ -56,8 +59,14 @@ internal class BuildGradleFile(override val parentPath: Path, naming: Naming) : 
         }
 
         dependencies {
+            implementation(project(":platform:launchable"))
             implementation(project(":platform:theme"))
+            implementation(Dependencies.ACCOMPANIST_NAVIGATION_MATERIAL)
+            implementation(Dependencies.COMPOSE_DESTINATIONS_ANIMATIONS)
+            implementation(Dependencies.COMPOSE_DESTINATIONS_CORE)
             implementation(Dependencies.KOIN)
+
+            ksp(Plugins.COMPOSE_DESTINATIONS)
         }
     """
 }

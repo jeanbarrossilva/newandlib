@@ -9,13 +9,16 @@ internal class DependenciesFile(override val parentPath: Path) : TextFile() {
     @Suppress("SpellCheckingInspection")
     override val text = """
         object Dependencies {
+            const val ACCOMPANIST_NAVIGATION_MATERIAL =
+                "com.google.accompanist:accompanist-navigation-material:${'$'}{Versions.ACCOMPANIST}"
+
             @Suppress("SpellCheckingInspection")
-            const val COMPOSE_DESTINATION_ANIMATIONS =
+            const val COMPOSE_DESTINATIONS_ANIMATIONS =
                 "io.github.raamcosta.compose-destinations:animations-core:${'$'}{Versions.COMPOSE_DESTINATIONS}"
 
             @Suppress("SpellCheckingInspection")
             const val COMPOSE_DESTINATIONS_CORE =
-                "io.github.raamcosta.compose-destinations:core${'$'}{Versions.COMPOSE_DESTINATIONS}"
+                "io.github.raamcosta.compose-destinations:core:${'$'}{Versions.COMPOSE_DESTINATIONS}"
 
             const val COMPOSE_MATERIAL_3 =
                 "androidx.compose.material3:material3-android:${'$'}{Versions.COMPOSE_MATERIAL_3}"
