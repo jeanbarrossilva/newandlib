@@ -13,8 +13,11 @@ abstract class Prompter internal constructor() {
      * @return The user's input.
      **/
     fun prompt(prompt: Prompt): String {
-        val getInputOrDefault = { onPrompt(prompt) ?: prompt.default ?: prompt(prompt) }
-        val input = prompt.receive(getInputOrDefault(), onFailure = getInputOrDefault)
+        val input = onPrompt(prompt) ?: prompt.default ?: prompt(prompt)
+        val isInvalid = !prompt.isValid(input)
+        if (isInvalid) {
+            prompt(prompt)
+        }
         prompts[prompt::class] = input
         return input
     }

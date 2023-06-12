@@ -6,7 +6,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.assertThrows
 
 internal class PrompterTests {
@@ -50,7 +49,6 @@ internal class PrompterTests {
         assertEquals("red", prompter.require<TestPrompt>())
     }
 
-    @Disabled
     @Test
     @OptIn(ExperimentalCoroutinesApi::class)
     fun `GIVEN an input constrained to options WHEN inputting none of them THEN the prompt is repeated`() {
