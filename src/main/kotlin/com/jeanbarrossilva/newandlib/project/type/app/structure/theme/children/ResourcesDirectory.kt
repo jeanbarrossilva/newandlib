@@ -1,7 +1,7 @@
 package com.jeanbarrossilva.newandlib.project.type.app.structure.theme.children
 
 import com.jeanbarrossilva.newandlib.project.info.Naming
-import com.jeanbarrossilva.newandlib.project.type.app.structure.theme.children.resources.FontDirectory
+import com.jeanbarrossilva.newandlib.project.type.app.structure.theme.children.resources.FontFile
 import com.jeanbarrossilva.newandlib.project.type.app.structure.theme.children.resources.ValuesDirectory
 import com.jeanbarrossilva.newandlib.project.type.app.structure.theme.children.resources.ValuesNightDirectory
 import com.jeanbarrossilva.newandlib.tool.extensions.at
@@ -12,5 +12,5 @@ import java.nio.file.Path
 
 internal class ResourcesDirectory(root: Path, naming: Naming) : Directory() {
     override val path = root.mainSource + at("res")
-    override val children = listOf(FontDirectory(path), ValuesDirectory(path, naming), ValuesNightDirectory(path))
+    override val children = listOf(FontFile(path), ValuesDirectory(path, naming), ValuesNightDirectory(path))
 }

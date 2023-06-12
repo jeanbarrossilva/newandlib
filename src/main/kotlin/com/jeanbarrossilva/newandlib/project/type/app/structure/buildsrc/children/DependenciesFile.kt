@@ -1,4 +1,4 @@
-package com.jeanbarrossilva.newandlib.project.type.app.structure.buildsrc
+package com.jeanbarrossilva.newandlib.project.type.app.structure.buildsrc.children
 
 import com.jeanbarrossilva.newandlib.tool.file.TextFile
 import java.nio.file.Path
@@ -23,9 +23,10 @@ internal class DependenciesFile(override val parentPath: Path) : TextFile() {
             const val COROUTINES_CORE =
                 "org.jetbrains.kotlinx:kotlinx-coroutines-core:${'$'}{Versions.COROUTINES}"
 
+            const val KOIN = "io.insert-koin:koin-androidx-compose:${'$'}{Versions.KOIN}"
             const val LOADABLE = "com.jeanbarrossilva.loadable:loadable:${'$'}{Versions.LOADABLE}"
             const val LOADABLE_LIST = "com.jeanbarrossilva.loadable:loadable-list:${'$'}{Versions.LOADABLE}"
-            const val MATERIAL = "com.google.android.material:material:${'$'}{Versions.MATERIAL}
+            const val MATERIAL = "com.google.android.material:material:${'$'}{Versions.MATERIAL}"
             const val VIEWMODEL = "androidx.lifecycle:lifecycle-viewmodel-ktx:${'$'}{Versions.VIEWMODEL}"
         }
     """

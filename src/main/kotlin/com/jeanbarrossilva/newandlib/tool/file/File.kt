@@ -7,7 +7,7 @@ abstract class File {
     protected abstract val path: Path
 
     open fun write() {
-        Files.createDirectories(path.parent)
+        path.parent?.let(Files::createDirectories)
     }
 
     companion object {

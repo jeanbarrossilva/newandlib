@@ -1,8 +1,7 @@
-package com.jeanbarrossilva.newandlib.request.handler
+package com.jeanbarrossilva.newandlib.request
 
 import com.jeanbarrossilva.newandlib.project.ProjectGenerator
 import com.jeanbarrossilva.newandlib.project.type.library.LibraryProjectGenerator
-import com.jeanbarrossilva.newandlib.request.ProjectGeneratorRequestHandler
 import com.jeanbarrossilva.newandlib.tool.prompter.Prompter
 
 internal class LibraryProjectGeneratorRequestHandler(private val prompter: Prompter, override val next: ProjectGeneratorRequestHandler?) :

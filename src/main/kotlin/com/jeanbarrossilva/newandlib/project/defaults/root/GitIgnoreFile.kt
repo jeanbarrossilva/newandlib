@@ -6,15 +6,14 @@ import java.nio.file.Path
 internal class GitIgnoreFile(override val parentPath: Path) : TextFile() {
     override val name = ".gitignore"
     override val text = """
-        *.iml
-        .gradle
-        local.properties
-        .idea
-        .DS_Store
-        build
+        /.gradle
+        /.idea
+        /build
         /captures
-        .externalNativeBuild
+        *.iml
         .cxx
+        .DS_Store
+        .externalNativeBuild
         local.properties
     """
 }

@@ -1,4 +1,4 @@
-package com.jeanbarrossilva.newandlib.project.type.app.structure.buildsrc
+package com.jeanbarrossilva.newandlib.project.type.app.structure.buildsrc.children
 
 import com.jeanbarrossilva.newandlib.project.info.Naming
 import com.jeanbarrossilva.newandlib.tool.file.TextFile
@@ -19,6 +19,7 @@ internal class VersionsFile(override val parentPath: Path, naming: Naming) : Tex
             const val COROUTINES = "1.7.1"
             const val LOADABLE = "1.5.2"
             const val GRADLE = "8.0.2"
+            const val KOIN = "3.4.4"
             const val KOTLIN = "1.8.21"
             const val KSP = "1.8.21-1.0.11"
             const val MATERIAL = "1.9.0"

@@ -1,8 +1,6 @@
 package com.jeanbarrossilva.newandlib.request
 
 import com.jeanbarrossilva.newandlib.project.ProjectGenerator
-import com.jeanbarrossilva.newandlib.request.handler.AppProjectGeneratorRequestHandler
-import com.jeanbarrossilva.newandlib.request.handler.LibraryProjectGeneratorRequestHandler
 import com.jeanbarrossilva.newandlib.tool.prompter.Prompt
 import com.jeanbarrossilva.newandlib.tool.prompter.Prompter
 

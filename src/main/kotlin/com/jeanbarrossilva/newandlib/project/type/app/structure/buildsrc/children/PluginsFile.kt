@@ -1,4 +1,4 @@
-package com.jeanbarrossilva.newandlib.project.type.app.structure.buildsrc
+package com.jeanbarrossilva.newandlib.project.type.app.structure.buildsrc.children
 
 import com.jeanbarrossilva.newandlib.tool.file.TextFile
 import java.nio.file.Path

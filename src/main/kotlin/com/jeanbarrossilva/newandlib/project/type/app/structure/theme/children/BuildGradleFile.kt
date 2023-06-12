@@ -14,10 +14,10 @@ internal class BuildGradleFile(override val parentPath: Path, naming: Naming) : 
         
         android {
             namespace = Metadata.namespace("platform.theme")
-            compileSdk = Versions.${naming.default}.TARGET_SDK
+            compileSdk = Versions.${naming.default}.SDK_TARGET
         
             defaultConfig {
-                minSdk = Versions.${naming.default}.MIN_SDK
+                minSdk = Versions.${naming.default}.SDK_MIN
                 testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
                 consumerProguardFiles("consumer-rules.pro")
             }

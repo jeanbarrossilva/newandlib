@@ -11,7 +11,7 @@ import com.jeanbarrossilva.newandlib.tool.extensions.at
 import com.jeanbarrossilva.newandlib.tool.prompter.Prompter
 
 internal abstract class ProjectGenerator(protected val prompter: Prompter, typeName: String) {
-    open val prompts = listOf(
+    protected open val prompts = listOf(
         ProjectNamePrompt(),
         GroupIDPrompt(),
         ProjectTypeNamespacePrompt(prompter, typeName),

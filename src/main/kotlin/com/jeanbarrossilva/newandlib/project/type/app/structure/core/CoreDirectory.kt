@@ -11,11 +11,15 @@ import java.nio.file.Path
 import kotlin.io.path.createDirectories
 
 internal class CoreDirectory(root: Path, private val project: Project) : Directory() {
-    override val path = root + at("core").javaMainSource
+    override val path = root + at(NAME)
     override val children = listOf(BuildGradleFile(path), GitIgnoreFile(path))
 
     override fun onWrite() {
-        (path + project.`package`.path).createDirectories()
-        (path + at("src") + at("test") + at("java") + project.`package`.path + at("core")).createDirectories()
+        (path.javaMainSource + project.`package`.path + at(NAME)).createDirectories()
+        (path + at("src") + at("test") + at("java") + project.`package`.path + at(NAME)).createDirectories()
+    }
+
+    companion object {
+        private const val NAME = "core"
     }
 }

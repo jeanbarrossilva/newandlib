@@ -3,9 +3,11 @@ package com.jeanbarrossilva.newandlib.project.type.app.structure.theme.children.
 import com.jeanbarrossilva.newandlib.project.Project
 import com.jeanbarrossilva.newandlib.project.type.app.structure.theme.theme
 import com.jeanbarrossilva.newandlib.tool.file.TextFile
+import com.jeanbarrossilva.newandlib.utils.javaMainSource
 import java.nio.file.Path
 
-internal class ThemeProviderFile(override val parentPath: Path, project: Project) : TextFile() {
+internal class ThemeProviderFile(parentPath: Path, project: Project) : TextFile() {
+    override val parentPath = parentPath.javaMainSource
     override val name = "${project.naming.theme}.kt"
     override val text = """
         package ${project.`package`.name}.platform.theme

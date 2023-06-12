@@ -3,6 +3,7 @@ package com.jeanbarrossilva.newandlib.project.type.library
 import com.jeanbarrossilva.newandlib.project.Project
 import com.jeanbarrossilva.newandlib.project.ProjectGenerator
 import com.jeanbarrossilva.newandlib.project.type.library.prompt.RepositoryUrlPrompt
+import com.jeanbarrossilva.newandlib.project.type.library.structure.SettingsFile
 import com.jeanbarrossilva.newandlib.project.type.library.structure.app.BuildGradleFile
 import com.jeanbarrossilva.newandlib.project.type.library.structure.buildsrc.PluginsFile
 import com.jeanbarrossilva.newandlib.project.type.library.structure.buildsrc.RepositoryHandlerExtensionsFile
@@ -27,6 +28,7 @@ internal class LibraryProjectGenerator(prompter: Prompter) : ProjectGenerator(pr
         PublishingWorkflowFile(project.path + at(".github") + at("workflows")).write()
         RepositoryHandlerExtensionsFile(project.path + at("buildSrc").javaMainSource, project.naming, repositoryUrl)
             .write()
-        VersionsFile(project.path, project.naming)
+        SettingsFile(project.path, project.naming).write()
+        VersionsFile(project.path, project.naming).write()
     }
 }
