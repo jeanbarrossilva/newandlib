@@ -1,7 +1,6 @@
 package com.jeanbarrossilva.newandlib
 
 import com.jeanbarrossilva.newandlib.project.ProjectFormatter
-import com.jeanbarrossilva.newandlib.project.defaults.prompt.ProjectPathPrompt
 import com.jeanbarrossilva.newandlib.request.ProjectGeneratorRequester
 import com.jeanbarrossilva.newandlib.tool.prompter.prompt
 
@@ -12,7 +11,7 @@ fun main() {
 
         val project = ProjectGeneratorRequester.request(this).generate()
         ProjectFormatter.format(project)
-        ProcessBuilder().command("studio", "${get<ProjectPathPrompt>()}").start()
+        ProcessBuilder().command("studio", "${project.path}").start()
         println("Done!")
     }
 }
