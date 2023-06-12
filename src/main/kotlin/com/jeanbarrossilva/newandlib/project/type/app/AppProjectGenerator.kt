@@ -7,7 +7,7 @@ import com.jeanbarrossilva.newandlib.project.type.app.structure.app.BuildGradleF
 import com.jeanbarrossilva.newandlib.project.type.app.structure.buildsrc.BuildSrcDirectory
 import com.jeanbarrossilva.newandlib.project.type.app.structure.buildsrc.children.VersionsFile
 import com.jeanbarrossilva.newandlib.project.type.app.structure.core.CoreDirectory
-import com.jeanbarrossilva.newandlib.project.type.app.structure.theme.ThemeModuleDirectory
+import com.jeanbarrossilva.newandlib.project.type.app.structure.platform.theme.ThemeModuleDirectory
 import com.jeanbarrossilva.newandlib.tool.extensions.at
 import com.jeanbarrossilva.newandlib.tool.extensions.plus
 import com.jeanbarrossilva.newandlib.tool.prompter.Prompter
